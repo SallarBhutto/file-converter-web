@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/lib/seo/site-config";
+import { plannedTools, toolCategoryLabels, tools, type ToolCategory } from "@/lib/tools";
 
 export const metadata: Metadata = buildPageMetadata({
   // The root layout title template does not apply to the root segment, so the
@@ -28,14 +30,7 @@ const principles = [
   },
 ];
 
-const plannedTools = [
-  { category: "PDF to image", items: ["PDF to JPG", "PDF to PNG", "PDF to WebP"] },
-  { category: "Image to PDF", items: ["JPG to PDF", "PNG to PDF", "WebP to PDF"] },
-  {
-    category: "Compression",
-    items: ["Compress JPG", "Compress PNG", "Compress WebP", "Compress PDF"],
-  },
-];
+const categories: readonly ToolCategory[] = ["pdf-to-image", "image-to-pdf", "compression"];
 
 export default function HomePage() {
   return (
@@ -53,6 +48,45 @@ export default function HomePage() {
             {siteConfig.tagline} Every tool runs locally in your browser, so your
             files never leave your device.
           </p>
+        </Container>
+      </section>
+
+      <section aria-labelledby="tools-heading" className="border-b border-zinc-200 bg-zinc-50">
+        <Container className="py-16 sm:py-20">
+          <SectionHeading
+            id="tools-heading"
+            title="Tools"
+            description="Each tool gets its own page here as it becomes available. More converters are on the way."
+          />
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {tools.map((tool) => (
+              <li key={tool.slug}>
+                <Link
+                  href={tool.path}
+                  className="block rounded-lg border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-400"
+                >
+                  <span className="block text-base font-semibold text-zinc-900">{tool.name}</span>
+                  <span className="mt-1 block text-sm text-zinc-600">{tool.description}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <h3 className="mt-12 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+            Planned
+          </h3>
+          <div className="mt-4 grid gap-6 sm:grid-cols-3">
+            {categories.map((category) => (
+              <div key={category}>
+                <p className="text-sm font-medium text-zinc-700">{toolCategoryLabels[category]}</p>
+                <ul className="mt-2 space-y-1 text-sm text-zinc-500">
+                  {plannedTools[category].map((name) => (
+                    <li key={name}>{name}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </Container>
       </section>
 
@@ -75,30 +109,6 @@ export default function HomePage() {
               </li>
             ))}
           </ul>
-        </Container>
-      </section>
-
-      <section aria-labelledby="tools-heading" className="border-t border-zinc-200 bg-zinc-50">
-        <Container className="py-16 sm:py-20">
-          <SectionHeading
-            id="tools-heading"
-            title="Tools"
-            description="The first tool, PDF to JPG, is in development. Each tool gets its own page here as it becomes available."
-          />
-          <div className="mt-10 grid gap-8 sm:grid-cols-3">
-            {plannedTools.map((group) => (
-              <div key={group.category}>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
-                  {group.category}
-                </h3>
-                <ul className="mt-3 space-y-1.5 text-sm text-zinc-700">
-                  {group.items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
         </Container>
       </section>
     </>

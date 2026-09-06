@@ -92,6 +92,45 @@ PDF libraries must be lazy-loaded (dynamic import) so they stay out of the
 initial page bundle. The PDF.js worker must be configured to run as a real
 Web Worker, not the main-thread fallback.
 
+### How PDF.js is wired (implemented)
+
+- `src/lib/pdf/loader.ts` is the only module that imports `pdfjs-dist`, and
+  it does so with a dynamic `import()` inside `openPdfDocument()`. The
+  library therefore lives in its own chunk that is fetched the first time a
+  user selects a PDF, never on page load and never on unrelated routes.
+- `scripts/copy-pdfjs-assets.mjs` runs before `next dev` and `next build`
+  and copies the worker plus every support directory PDF.js fetches on
+  demand from `node_modules` into the git-ignored `public/pdfjs/`. Each
+  directory maps to one `getDocument()` option:
+
+  | Directory | Option | Purpose |
+  | --- | --- | --- |
+  | `cmaps/` | `cMapUrl` (+ `cMapPacked`) | predefined CMaps for CJK fonts |
+  | `standard_fonts/` | `standardFontDataUrl` | fallbacks for non-embedded fonts |
+  | `iccs/` | `iccUrl` | CMYK ICC profile for colour conversion |
+  | `wasm/` | `wasmUrl` | OpenJPEG (JPX), JBIG2 and qcms (ICC) decoders |
+
+  `workerSrc` points at `/pdfjs/pdf.worker.min.mjs`, so the worker is a real
+  module Worker served by Next.js. The `quickjs-eval.*` files belong to the
+  optional scripting sandbox and are not copied. No CDN is involved.
+- `src/lib/pdf/canvas-limits.ts` decides output size. Pages render at
+  150 DPI relative to the PDF's 72 pt/inch, subject to two independent caps:
+  `MAX_CANVAS_PIXELS` (16,777,216 px of *area*, the size of a 4096 × 4096
+  square, any shape) and `MAX_CANVAS_SIDE` (8192 px per side). The scale is
+  reduced uniformly until both hold, so aspect ratio is preserved and
+  ordinary pages are untouched. Device pixel ratio is ignored because the
+  output is a file.
+- `src/lib/pdf/renderer.ts` renders one page into a caller-owned canvas,
+  encodes it with `canvas.toBlob` for any raster format, and optionally
+  draws a downscaled JPEG preview from the same canvas before it is reused.
+  PDF → PNG and PDF → WebP reuse it by passing a different `format`.
+- Result previews are separate small JPEGs (longest side 480 px, quality
+  0.7), never the full-size download image, so the browser only decodes
+  thumbnails for display. Each result owns two object URLs, one per image,
+  revoked together on reset, replacement, cancellation, restart and unmount.
+- Library exceptions are mapped to product errors by name in
+  `src/lib/pdf/errors.ts`; UI code never sees PDF.js error types.
+
 ## Image Processing
 
 Prefer native browser APIs first:
@@ -105,6 +144,13 @@ Prefer native browser APIs first:
 Add third-party libraries only where they provide a clear benefit the platform
 cannot (for example, better PNG compression than `canvas.toBlob` offers).
 Follow the dependency checklist in [coding-standards.md](coding-standards.md).
+
+### ZIP downloads (implemented)
+
+Multi-file downloads use `fflate`, imported dynamically only when the user
+clicks "Download All". Entries are stored rather than deflated because
+JPEG/PNG/WebP data does not compress further, and files are fed in one at a
+time so at most one page's bytes are duplicated while the archive is built.
 
 ## Image → PDF
 

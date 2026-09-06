@@ -4,17 +4,17 @@ Roadmap items are directional and can change. Nothing below is implemented
 unless stated. Phase boundaries exist to enforce D007 (build incrementally)
 in [decisions.md](decisions.md).
 
-## Phase 0 — Foundation (current)
+## Phase 0 — Foundation
 
 - knowledge base (this directory) ✔
 - Next.js project initialization ✔
 - design foundation (layout, typography, Tailwind setup) ✔
 - SEO foundation (metadata defaults, sitemap, robots, site URL config) ✔
-- processing architecture (lib boundaries, lazy-loading pattern) — established with the first tool
+- processing architecture (lib boundaries, lazy-loading pattern) ✔
 
-## Phase 1 — First Vertical Slice: PDF → JPG
+## Phase 1 — First Vertical Slice: PDF → JPG ✔
 
-The first complete tool. It must establish the patterns every later tool
+Implemented at `/pdf-to-jpg`. It established the patterns every later tool
 reuses:
 
 - browser-only file handling
@@ -26,7 +26,7 @@ reuses:
 - responsive UX
 - SEO tool-page pattern (see [seo.md](seo.md))
 
-## Phase 2 — PDF to Image
+## Phase 2 — PDF to Image (next)
 
 - PDF → PNG
 - PDF → WebP

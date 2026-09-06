@@ -6,9 +6,12 @@ processed on a server, or stored.
 
 ## Status
 
-Foundation only. The Next.js application shell, layout, homepage, and SEO
-infrastructure exist. **No converter is implemented yet.** The first tool,
-PDF to JPG, is next; see [docs/roadmap.md](docs/roadmap.md).
+**PDF → JPG is implemented** at `/pdf-to-jpg`: pick a PDF, choose a quality
+preset, and download each page as a JPG or all pages as a ZIP. Everything runs
+in the browser with PDF.js.
+
+No other converter exists yet. See [docs/roadmap.md](docs/roadmap.md) for the
+order the remaining tools will be built in.
 
 ## Stack
 
@@ -16,8 +19,10 @@ PDF to JPG, is next; see [docs/roadmap.md](docs/roadmap.md).
 - React 19
 - TypeScript (strict)
 - Tailwind CSS 4
-- ESLint
-- npm
+- PDF.js (`pdfjs-dist`) for PDF rendering, loaded on demand
+- fflate for in-browser ZIP creation, loaded on demand
+- Vitest for unit tests
+- ESLint, npm
 
 ## Local development
 
@@ -27,6 +32,11 @@ npm run dev
 ```
 
 Open http://localhost:3000.
+
+`npm run dev` and `npm run build` first run `scripts/copy-pdfjs-assets.mjs`,
+which copies the PDF.js worker, CMaps, standard fonts, ICC profile, and WASM
+decoders from `node_modules` into the git-ignored `public/pdfjs/` directory. Next.js serves
+them as static files; nothing is fetched from a CDN.
 
 Copy `.env.example` to `.env.local` if you need to override the site origin.
 
@@ -42,12 +52,14 @@ domains. These variables are not secrets.
 ```bash
 npm run lint
 npm run typecheck
+npm test
 npm run build
 ```
 
-Run all three before considering a change complete. There is no test suite
-yet; one will be added when the first pure utility logic lands (see
-[docs/testing.md](docs/testing.md)).
+Run all four before considering a change complete. Tests cover pure logic
+only: file validation, size formatting, filename generation, quality presets,
+progress, and render-dimension safeguards. See
+[docs/testing.md](docs/testing.md).
 
 ## Project knowledge base
 
