@@ -1,21 +1,8 @@
-import type { ExifOrientation } from "@/lib/image/exif-orientation";
+import type { SelectedImage } from "@/lib/image/selected-image";
 
 import type { PageSettings } from "./layout";
 
-/** One accepted image. The original File is kept for PDF generation. */
-export interface SelectedImage {
-  id: string;
-  file: File;
-  name: string;
-  size: number;
-  /** Displayed (orientation-corrected) pixel dimensions. */
-  width: number;
-  height: number;
-  /** EXIF orientation for JPEGs; null when absent or not a JPEG. */
-  exifOrientation: ExifOrientation | null;
-  /** Small JPEG used only for on-screen display. Owns one object URL. */
-  preview: { objectUrl: string; width: number; height: number };
-}
+export type { SelectedImage };
 
 /** The finished PDF. Owns one object URL. */
 export interface GeneratedPdf {

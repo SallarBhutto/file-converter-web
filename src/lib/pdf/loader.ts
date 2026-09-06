@@ -4,7 +4,7 @@ import { PdfProcessingError, throwIfAborted, toPdfProcessingError } from "./erro
 
 /**
  * Static files copied from node_modules/pdfjs-dist by
- * scripts/copy-pdfjs-assets.mjs and served by Next.js from public/pdfjs.
+ * scripts/copy-vendor-assets.mjs and served by Next.js from public/pdfjs.
  * Nothing is fetched from a CDN.
  */
 const PDFJS_ASSET_BASE = "/pdfjs";
@@ -75,7 +75,7 @@ export async function openPdfDocument(
   const data = await file.arrayBuffer();
   throwIfAborted(signal);
 
-  // Every support directory below is produced by scripts/copy-pdfjs-assets.mjs.
+  // Every support directory below is produced by scripts/copy-vendor-assets.mjs.
   // The worker fetches from these URLs on demand (useWorkerFetch defaults to
   // true in browsers); trailing slashes are required by the API.
   const loadingTask = pdfjs.getDocument({

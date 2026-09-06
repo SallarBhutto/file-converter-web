@@ -4,10 +4,10 @@ import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/lib/seo/site-config";
 import { getToolsByCategory, toolCategories, toolCategoryLabels } from "@/lib/tools";
 
-import { MobileNav, type MobileNavGroup } from "./mobile-nav";
+import { ToolsMenu, type ToolsMenuGroup } from "./tools-menu";
 
-/** Registry-derived groups for the mobile menu; categories with no live tool are skipped. */
-function buildMobileGroups(): MobileNavGroup[] {
+/** Registry-derived groups for the tools menu; categories with no live tool are skipped. */
+function buildMenuGroups(): ToolsMenuGroup[] {
   return toolCategories
     .map((category) => ({
       label: toolCategoryLabels[category],
@@ -17,9 +17,9 @@ function buildMobileGroups(): MobileNavGroup[] {
 }
 
 /**
- * Site header. The brand link and the desktop row are server-rendered; the
- * compact menu for narrow screens is the only client-side piece and receives
- * its links as props, so both views derive from the same tool registry.
+ * Site header: the brand link and one grouped tools menu. With nine tools a
+ * flat row no longer fits at any sensible size, so the same registry-driven
+ * menu serves every width; only its presentation changes.
  */
 export function SiteHeader() {
   return (
@@ -31,21 +31,7 @@ export function SiteHeader() {
         >
           {siteConfig.name}
         </Link>
-        <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-x-5 text-sm">
-            {siteConfig.navigation.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="-mx-2 inline-flex min-h-11 items-center rounded-sm px-2 text-zinc-600 transition-colors hover:text-zinc-900"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <MobileNav groups={buildMobileGroups()} />
+        <ToolsMenu groups={buildMenuGroups()} />
       </Container>
     </header>
   );

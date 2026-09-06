@@ -48,16 +48,18 @@ shared feature, `src/features/image-to-pdf/`, with reorder (drag and drop
 plus move buttons), page size (A4, Letter, Fit to image), orientation
 (Auto, Portrait, Landscape) and margins (None, Small, Medium).
 
-## Phase 4 — Image Compression (next)
+## Phase 4 — Image Compression ✔
 
-- Compress JPG
-- Compress PNG
-- Compress WebP
+- Compress JPG ✔
+- Compress PNG ✔
+- Compress WebP ✔
 
-Use preset-based controls (see [ui-ux.md](ui-ux.md)) and show before/after
-sizes.
+Implemented at `/compress-jpg`, `/compress-png` and `/compress-webp` on one
+shared feature, `src/features/image-compression/`. JPG and WebP use preset
+quality through the browser's canvas encoders; PNG is lossless via OxiPNG in
+WebAssembly. Output is never larger than the input.
 
-## Phase 5 — PDF Compression
+## Phase 5 — PDF Compression (next)
 
 Investigate appropriate browser-side techniques before committing to an
 approach. PDF compression is more nuanced than image compression.

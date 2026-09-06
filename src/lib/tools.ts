@@ -56,12 +56,33 @@ export const tools: readonly ToolDefinition[] = [
     description: "Turn WebP images into a standard PDF document.",
     category: "image-to-pdf",
   },
+  {
+    slug: "compress-jpg",
+    path: "/compress-jpg",
+    name: "Compress JPG",
+    description: "Shrink JPG photos while choosing the quality to keep.",
+    category: "compression",
+  },
+  {
+    slug: "compress-png",
+    path: "/compress-png",
+    name: "Compress PNG",
+    description: "Optimize PNG files losslessly, transparency intact.",
+    category: "compression",
+  },
+  {
+    slug: "compress-webp",
+    path: "/compress-webp",
+    name: "Compress WebP",
+    description: "Reduce WebP file size with your choice of quality.",
+    category: "compression",
+  },
 ];
 
 export const toolCategoryLabels: Record<ToolCategory, string> = {
   "pdf-to-image": "PDF to image",
   "image-to-pdf": "Image to PDF",
-  compression: "Compression",
+  compression: "Compress images",
 };
 
 export const toolCategories: readonly ToolCategory[] = ["pdf-to-image", "image-to-pdf", "compression"];
@@ -70,7 +91,7 @@ export const toolCategories: readonly ToolCategory[] = ["pdf-to-image", "image-t
 export const plannedTools: Record<ToolCategory, readonly string[]> = {
   "pdf-to-image": [],
   "image-to-pdf": [],
-  compression: ["Compress JPG", "Compress PNG", "Compress WebP", "Compress PDF"],
+  compression: ["Compress PDF"],
 };
 
 export function getToolsByCategory(category: ToolCategory): readonly ToolDefinition[] {

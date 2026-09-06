@@ -14,8 +14,10 @@ export async function decodeImage(file: Blob, signal?: AbortSignal): Promise<Ima
   }
 }
 
+export type EncodableType = "image/jpeg" | "image/png" | "image/webp";
+
 export interface EncodeOptions {
-  type: "image/jpeg" | "image/png";
+  type: EncodableType;
   /** Encoder quality in [0, 1]; ignored for PNG. */
   quality?: number;
   /** Longest side of the output; the bitmap is downscaled to fit, never upscaled. */
@@ -30,8 +32,11 @@ export interface EncodedImage {
 
 /**
  * Draws a bitmap onto a temporary canvas and encodes it. JPEG output is
- * composited onto white because JPEG has no alpha channel; PNG keeps
- * transparency. The canvas backing store is released before returning.
+ * composited onto white because JPEG has no alpha channel; PNG and WebP keep
+ * transparency. Browsers silently fall back to PNG for encoders they lack,
+ * so a Blob whose type differs from the request is rejected as
+ * "unsupported" rather than returned mislabelled. The canvas backing store
+ * is released before returning.
  */
 export async function encodeBitmap(
   bitmap: ImageBitmap,

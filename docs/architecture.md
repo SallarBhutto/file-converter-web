@@ -98,7 +98,7 @@ Web Worker, not the main-thread fallback.
   it does so with a dynamic `import()` inside `openPdfDocument()`. The
   library therefore lives in its own chunk that is fetched the first time a
   user selects a PDF, never on page load and never on unrelated routes.
-- `scripts/copy-pdfjs-assets.mjs` runs before `next dev` and `next build`
+- `scripts/copy-vendor-assets.mjs` runs before `next dev` and `next build`
   and copies the worker plus every support directory PDF.js fetches on
   demand from `node_modules` into the git-ignored `public/pdfjs/`. Each
   directory maps to one `getDocument()` option:
@@ -201,6 +201,31 @@ dimensions and draw a 320 px thumbnail) and during generation; every
 full-size data retained. Thumbnail and result object URLs are revoked on
 remove, reset, regeneration, stale result and unmount.
 
+## Image compression (implemented)
+
+One feature, `src/features/image-compression/`, with a per-format config:
+
+- **JPG and WebP** decode with `createImageBitmap({ imageOrientation:
+  "from-image" })`, draw to a canvas at the original pixel size and re-encode
+  with `canvas.toBlob` at the preset quality. No dependency. Metadata is not
+  carried over, which is why EXIF-rotated photos come out upright. The WebP
+  path keeps alpha and rejects the browser's silent PNG fallback by checking
+  the Blob's MIME type.
+- **PNG** is optimised losslessly by `@jsquash/oxipng`, a WebAssembly build
+  of OxiPNG that rewrites the original bytes, so pixels and transparency are
+  untouched by construction. It is imported dynamically inside
+  `compress-image.ts` and its `.wasm` is emitted by the bundler as a static
+  asset, fetched the first time a PNG is compressed. The wrapper picks the
+  single-threaded build outside Workers, so no cross-origin isolation
+  headers are needed.
+- **Never larger:** `savings.ts` compares sizes and, when re-encoding does
+  not shrink a file, the original `File` is delivered as the result and
+  flagged "already optimized". Savings percentages are clamped to 1–99 % and
+  guarded against zero-size input.
+- Selection thumbnails come from the shared `src/lib/image/selected-image.ts`
+  loader (also used by image-to-PDF); result rows reuse the selection
+  thumbnail rather than decoding the compressed output again.
+
 ## Memory Management
 
 Browser memory is the main constraint of the browser-only model. Rules:
@@ -266,8 +291,9 @@ src/
   features/
     pdf-to-image/ # shared PDF → JPG/PNG/WebP feature, format config per tool
     image-to-pdf/ # shared JPG/PNG/WebP → PDF feature, format config per tool
+    image-compression/ # shared JPG/PNG/WebP compressor, format config per tool
   lib/
-    files/        # validation, naming, size formatting
+    files/        # validation, naming, size formatting, ZIP building
     pdf/          # PDF.js loading and rendering
     image/        # browser decoding, canvas encoding, EXIF orientation
     seo/          # metadata helpers, site URL config

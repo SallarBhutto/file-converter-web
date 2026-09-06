@@ -1,9 +1,7 @@
-import { tools } from "@/lib/tools";
-
 /**
- * Central site configuration. Product copy and navigation live here so that
- * layout, metadata, and SEO routes never hard-code them. Tool links derive
- * from the tool registry so navigation only ever points at live routes.
+ * Central site configuration. Product copy lives here so that layout,
+ * metadata, and SEO routes never hard-code it. Navigation derives from the
+ * tool registry in `src/lib/tools.ts`, so it only ever points at live routes.
  */
 export const siteConfig = {
   name: "File Converter Web",
@@ -11,8 +9,4 @@ export const siteConfig = {
   description:
     "Free file conversion and compression tools that run entirely in your browser. Your files never leave your device.",
   locale: "en_US",
-  navigation: [
-    { label: "Home", href: "/" },
-    ...tools.map((tool) => ({ label: tool.name, href: tool.path })),
-  ],
 } as const;
