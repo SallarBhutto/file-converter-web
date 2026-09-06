@@ -14,15 +14,21 @@
  *   quickjs-eval.* belongs to the optional scripting sandbox, which this
  *   application does not load, so it is skipped.
  *
+ * public/qpdf — qpdf-run's browser runner, its classic Web Worker, and the
+ *   Emscripten qpdf runtime and WASM it vendors. Imported at runtime by URL
+ *   so the worker script, `importScripts()` glue and 1.8 MB WASM never pass
+ *   through the bundler.
+ *
  * public/oxipng — the single-threaded OxiPNG wasm-bindgen module from
  *   @jsquash/oxipng. It is imported at runtime by URL rather than bundled:
  *   the generated glue assigns to `import.meta.url`, which bundlers cannot
  *   process, and the multi-threaded build needs a Worker plus cross-origin
  *   isolation this site does not use.
  */
-import { cpSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 
@@ -67,8 +73,30 @@ function copyOxipng() {
   return version;
 }
 
+function copyQpdf() {
+  // qpdf-run's exports map hides package.json, so locate the package through
+  // one of its exported assets instead.
+  const wasmPath = fileURLToPath(import.meta.resolve("qpdf-run/qpdf.wasm"));
+  const root = path.resolve(path.dirname(wasmPath), "../../..");
+  const { version } = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
+  const out = path.resolve("public/qpdf");
+  resetDir(out);
+
+  mkdirSync(path.join(out, "src"));
+  for (const file of ["index.js", "browserRunner.js", "bytes.js", "worker.js"]) {
+    cpSync(path.join(root, "src", file), path.join(out, "src", file));
+  }
+  mkdirSync(path.join(out, "lib"));
+  for (const file of ["qpdf.js", "qpdf.wasm"]) {
+    cpSync(path.join(root, "vendor/qpdf/lib", file), path.join(out, "lib", file));
+  }
+  writeFileSync(path.join(out, "VERSION"), `${version}\n`);
+  return version;
+}
+
 const pdfjsVersion = copyPdfjs();
 const oxipngVersion = copyOxipng();
+const qpdfVersion = copyQpdf();
 console.log(
-  `Copied pdfjs-dist ${pdfjsVersion} to public/pdfjs and @jsquash/oxipng ${oxipngVersion} to public/oxipng`,
+  `Copied pdfjs-dist ${pdfjsVersion} to public/pdfjs, @jsquash/oxipng ${oxipngVersion} to public/oxipng, qpdf-run ${qpdfVersion} to public/qpdf`,
 );

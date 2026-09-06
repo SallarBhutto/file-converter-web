@@ -226,6 +226,33 @@ One feature, `src/features/image-compression/`, with a per-format config:
   loader (also used by image-to-PDF); result rows reuse the selection
   thumbnail rather than decoding the compressed output again.
 
+## PDF compression (implemented)
+
+One feature, `src/features/pdf-compression/`, with three modes defined in
+`modes.ts` (see D009 in [decisions.md](decisions.md)):
+
+- **Preserve / Balanced** run qpdf 11 compiled to WebAssembly through
+  `qpdf-run`, inside a classic Web Worker. `src/lib/pdf/qpdf.ts` imports the
+  runner by URL at runtime from `public/qpdf/` (copied from node_modules by
+  `scripts/copy-vendor-assets.mjs`), so the worker script, its
+  `importScripts()` glue and the 1.8 MB WASM never pass through the bundler
+  and nothing is fetched until the user presses Compress. The command line
+  is built by the pure `qpdf-args.ts`: the lossless base
+  (`--compress-streams=y --decode-level=generalized --recompress-flate
+  --compression-level=9 --object-streams=generate`) plus
+  `--optimize-images` for Balanced. This qpdf build has no
+  `--jpeg-quality`; it uses libjpeg's default and only replaces images that
+  get smaller. qpdf cannot be interrupted mid-command, so Cancel terminates
+  the worker; the next run starts a fresh one.
+- **Maximum** reuses the PDF.js loader and `renderPageToBlob` at 130 DPI and
+  JPEG quality 0.7, with no preview images, and rebuilds the document with
+  jsPDF page by page using each page's viewport size in points, so aspect
+  ratio and orientation survive. One canvas is reused and each page's JPEG
+  is dropped once embedded.
+- Every mode goes through the shared `src/lib/files/savings.ts`: when the
+  candidate is not smaller, the original File is delivered and labelled
+  already optimized.
+
 ## Memory Management
 
 Browser memory is the main constraint of the browser-only model. Rules:
@@ -292,9 +319,10 @@ src/
     pdf-to-image/ # shared PDF → JPG/PNG/WebP feature, format config per tool
     image-to-pdf/ # shared JPG/PNG/WebP → PDF feature, format config per tool
     image-compression/ # shared JPG/PNG/WebP compressor, format config per tool
+    pdf-compression/   # Compress PDF: qpdf modes plus rasterising Maximum mode
   lib/
     files/        # validation, naming, size formatting, ZIP building
-    pdf/          # PDF.js loading and rendering
+    pdf/          # PDF.js loading and rendering, qpdf worker runner
     image/        # browser decoding, canvas encoding, EXIF orientation
     seo/          # metadata helpers, site URL config
   types/

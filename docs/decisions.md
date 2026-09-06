@@ -139,3 +139,35 @@ Vercel-generated host must never override the real domain once it exists.
 - `NEXT_PUBLIC_SITE_URL` must be set to the real canonical domain once a
   custom production domain is chosen.
 - Any new absolute-URL feature must use `getSiteUrl()` or `absoluteUrl()`.
+
+---
+
+## D009 — PDF compression modes and engine
+
+**Status:** Accepted
+
+**Decision:** `/compress-pdf` offers exactly three modes with fixed
+semantics. Preserve is a lossless qpdf rewrite. Balanced is Preserve plus
+qpdf's `--optimize-images`, which may recompress embedded images but never
+touches page content. Maximum rasterises every page with PDF.js and
+rebuilds the PDF with jsPDF, and the UI states before conversion that text,
+links and forms may be lost. qpdf runs as WebAssembly (`qpdf-run`) in a Web
+Worker served from `public/qpdf/`; no other PDF optimiser is added. In
+every mode a result that is not smaller than the input is replaced by the
+original and labelled already optimized.
+
+**Reasoning:** Users need to know whether a compressed PDF is still a
+document or has become a set of pictures. Naming the trade-off as a mode,
+rather than a single "compress" button that silently chooses, keeps
+privacy and honesty claims true. qpdf is the maintained, standard PDF
+rewriting engine; `qpdf-run` wraps the current qpdf in a worker with a
+byte-array API and needs no CDN.
+
+**Consequences:**
+- Digital signatures are invalidated by every mode; the FAQ says so and
+  no signature preservation is attempted.
+- qpdf cannot be interrupted mid-command; cancellation terminates the
+  worker and the next run pays the worker start-up again.
+- Password-protected PDFs are rejected rather than unlocked.
+- Adding a mode means adding a config entry in `modes.ts` and, if it needs a
+  new engine, a new decision entry.

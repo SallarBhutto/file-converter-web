@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { formatFileSize } from "@/lib/files/formatting";
 
-import type { SelectedPdf } from "../types";
-
 interface SelectedFileCardProps {
-  file: SelectedPdf;
+  file: { name: string; size: number };
+  /** Short badge text, e.g. "PDF". */
+  badge: string;
   /** Null until the document has been parsed. */
   pageCount: number | null;
   /** Replaces the page count while the document is still being read. */
@@ -13,8 +13,10 @@ interface SelectedFileCardProps {
   removeDisabled?: boolean;
 }
 
+/** The selected single file: name, size, page count once known, and a Remove control. */
 export function SelectedFileCard({
   file,
+  badge,
   pageCount,
   statusText,
   onRemove,
@@ -30,7 +32,7 @@ export function SelectedFileCard({
         aria-hidden="true"
         className="flex size-11 shrink-0 items-center justify-center rounded-md bg-white text-xs font-semibold text-accent ring-1 ring-zinc-200"
       >
-        PDF
+        {badge}
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate font-medium text-zinc-900" title={file.name}>

@@ -2,6 +2,7 @@
 
 import { FileDropzone } from "@/components/tool/file-dropzone";
 import { PrivacyNote } from "@/components/tool/privacy-note";
+import { SelectedFileCard } from "@/components/tool/selected-file-card";
 import { Button } from "@/components/ui/button";
 
 import { getRasterFormat, type RasterOutputFormat } from "../formats";
@@ -9,7 +10,6 @@ import { usePdfToImage } from "../use-pdf-to-image";
 import { ConversionProgressPanel } from "./conversion-progress";
 import { QualitySelector } from "./quality-selector";
 import { ResultsList } from "./results-list";
-import { SelectedFileCard } from "./selected-file-card";
 
 function ErrorMessage({ message }: { message: string }) {
   return (
@@ -74,6 +74,7 @@ export function PdfToImageConverter({ format }: PdfToImageConverterProps) {
     <div className="space-y-6 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-8">
       <SelectedFileCard
         file={file}
+        badge="PDF"
         pageCount={pageCount}
         statusText={state.status === "loading-document" ? "Reading PDF…" : undefined}
         onRemove={reset}

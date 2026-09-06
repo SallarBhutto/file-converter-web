@@ -57,6 +57,13 @@ export const tools: readonly ToolDefinition[] = [
     category: "image-to-pdf",
   },
   {
+    slug: "compress-pdf",
+    path: "/compress-pdf",
+    name: "Compress PDF",
+    description: "Shrink a PDF while keeping its structure, or flatten it for the smallest file.",
+    category: "compression",
+  },
+  {
     slug: "compress-jpg",
     path: "/compress-jpg",
     name: "Compress JPG",
@@ -91,7 +98,7 @@ export const toolCategories: readonly ToolCategory[] = ["pdf-to-image", "image-t
 export const plannedTools: Record<ToolCategory, readonly string[]> = {
   "pdf-to-image": [],
   "image-to-pdf": [],
-  compression: ["Compress PDF"],
+  compression: [],
 };
 
 export function getToolsByCategory(category: ToolCategory): readonly ToolDefinition[] {

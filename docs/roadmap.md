@@ -59,29 +59,22 @@ shared feature, `src/features/image-compression/`. JPG and WebP use preset
 quality through the browser's canvas encoders; PNG is lossless via OxiPNG in
 WebAssembly. Output is never larger than the input.
 
-## Phase 5 — PDF Compression (next)
+## Phase 5 — PDF Compression ✔
 
-Investigate appropriate browser-side techniques before committing to an
-approach. PDF compression is more nuanced than image compression.
+Implemented at `/compress-pdf` with three explicit modes (see D009 in
+[decisions.md](decisions.md)):
 
-Potential modes:
+- **Preserve** — lossless qpdf rewrite; keeps text, vectors, links, forms.
+- **Balanced** — Preserve plus qpdf image optimisation; embedded images may
+  be recompressed, document structure is kept.
+- **Maximum** — pages rendered with PDF.js at 130 DPI / JPEG 0.7 and
+  rebuilt with jsPDF; smallest files, text and links are lost and the UI
+  says so before conversion.
 
-- light optimization
-- balanced
-- maximum/rasterized
+Output is never larger than the input. Encrypted PDFs are rejected with a
+message; password handling is not implemented.
 
-Aggressive compression may affect:
-
-- selectable text
-- links
-- vector content
-- forms
-
-The UI must warn about these trade-offs. Do not implement this incorrectly
-just to satisfy the roadmap. If a good browser-side approach is not viable,
-record that in `decisions.md` rather than shipping a misleading tool.
-
-## Phase 6 — SEO Expansion
+## Phase 6 — SEO Expansion (next)
 
 After tools work:
 

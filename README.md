@@ -6,7 +6,7 @@ processed on a server, or stored.
 
 ## Status
 
-**Nine tools are implemented.**
+**Ten tools are implemented.**
 
 - PDF to image: `/pdf-to-jpg`, `/pdf-to-png`, `/pdf-to-webp`. Rendering
   uses PDF.js.
@@ -14,14 +14,15 @@ processed on a server, or stored.
   uses jsPDF.
 - Compress images: `/compress-jpg`, `/compress-png`, `/compress-webp`.
   JPG and WebP re-encode through the browser's own encoders; PNG is
-  optimised losslessly with OxiPNG (WebAssembly). Files are never made
-  larger: when re-encoding does not help, the original is returned and
-  marked as already optimized.
+  optimised losslessly with OxiPNG (WebAssembly).
+- Compress PDF: `/compress-pdf`. Preserve and Balanced rewrite the file with
+  qpdf (WebAssembly, in a Web Worker); Maximum renders pages with PDF.js
+  and rebuilds them with jsPDF.
 
-Everything runs in the browser. Each family shares one converter and
-differs only by a small format configuration.
+Files are never made larger: when a rewrite does not help, the original is
+returned and marked as already optimized. Everything runs in the browser.
 
-PDF compression is not implemented yet. See [docs/roadmap.md](docs/roadmap.md).
+See [docs/roadmap.md](docs/roadmap.md) for what comes next.
 
 ## Stack
 
@@ -32,6 +33,7 @@ PDF compression is not implemented yet. See [docs/roadmap.md](docs/roadmap.md).
 - PDF.js (`pdfjs-dist`) for PDF rendering, loaded on demand
 - jsPDF for building PDFs from images, loaded on demand
 - @jsquash/oxipng for lossless PNG optimisation, loaded on demand
+- qpdf-run (qpdf 11 as WebAssembly) for PDF optimisation, loaded on demand
 - fflate for in-browser ZIP creation, loaded on demand
 - Vitest for unit tests
 - ESLint, npm
@@ -47,8 +49,9 @@ Open http://localhost:3000.
 
 `npm run dev` and `npm run build` first run `scripts/copy-vendor-assets.mjs`,
 which copies the PDF.js worker, CMaps, standard fonts, ICC profile, and WASM
-decoders into the git-ignored `public/pdfjs/` directory, and the OxiPNG
-WebAssembly module into `public/oxipng/`. Next.js serves
+decoders into the git-ignored `public/pdfjs/` directory, the OxiPNG
+WebAssembly module into `public/oxipng/`, and the qpdf runner, worker and
+WebAssembly into `public/qpdf/`. Next.js serves
 them as static files; nothing is fetched from a CDN.
 
 Copy `.env.example` to `.env.local` if you need to override the site origin.
@@ -73,7 +76,8 @@ Run all four before considering a change complete. Tests cover pure logic
 only: file validation, size formatting, filename generation, format
 configuration and quality presets, progress, canvas background planning,
 render-dimension safeguards, page layout maths, EXIF orientation parsing,
-list reordering, and compression savings and output selection. See
+list reordering, compression savings and output selection, PDF compression
+modes and qpdf argument generation. See
 [docs/testing.md](docs/testing.md).
 
 ## Project knowledge base

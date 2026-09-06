@@ -15,6 +15,7 @@ const eslintConfig = defineConfig([
     // Vendor files copied from node_modules by scripts/copy-vendor-assets.mjs.
     "public/pdfjs/**",
     "public/oxipng/**",
+    "public/qpdf/**",
   ]),
 ]);
 
