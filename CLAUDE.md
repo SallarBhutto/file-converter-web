@@ -3,8 +3,7 @@
 Free, privacy-first, browser-based file conversion and compression tools.
 Files are processed locally in the user's browser. They never leave the device.
 
-**Status:** Phase 0 (knowledge base only). No application code exists yet.
-Next.js has not been initialized and no dependencies are installed.
+`AGENTS.md` is managed by Next.js and is not part of this knowledge base.
 
 ## Knowledge Base
 

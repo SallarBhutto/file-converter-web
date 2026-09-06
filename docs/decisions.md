@@ -111,3 +111,31 @@ PDF → JPG, instead of implementing every converter simultaneously.
 
 **Reasoning:** Allows the shared architecture, memory handling, UX, and SEO
 patterns to be validated before scaling to more tools.
+
+---
+
+## D008 — Public site URL resolution order
+
+**Status:** Accepted
+
+**Decision:** Every absolute URL the app emits (canonical, Open Graph,
+`robots.txt`, `sitemap.xml`) comes from one resolver, `getSiteUrl()` in
+`src/lib/seo/site-url.ts`. It resolves in this order:
+
+1. `NEXT_PUBLIC_SITE_URL` (explicit, always wins)
+2. `VERCEL_PROJECT_PRODUCTION_URL` (Vercel production domain)
+3. `VERCEL_URL` (Vercel deployment host)
+4. `http://localhost:3000` (local development)
+
+Values are normalized to a bare origin: `https://` is added when a scheme is
+missing, and paths and trailing slashes are dropped. No domain is hard-coded
+anywhere else.
+
+**Reasoning:** The production domain is not chosen yet. Deploying to Vercel
+without configuration must not produce localhost canonicals, but a
+Vercel-generated host must never override the real domain once it exists.
+
+**Consequences:**
+- `NEXT_PUBLIC_SITE_URL` must be set to the real canonical domain once a
+  custom production domain is chosen.
+- Any new absolute-URL feature must use `getSiteUrl()` or `absoluteUrl()`.

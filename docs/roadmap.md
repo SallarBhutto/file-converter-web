@@ -7,10 +7,10 @@ in [decisions.md](decisions.md).
 ## Phase 0 — Foundation (current)
 
 - knowledge base (this directory) ✔
-- Next.js project initialization
-- design foundation (layout, typography, Tailwind setup)
-- SEO foundation (metadata defaults, sitemap, robots, site URL config)
-- processing architecture (lib boundaries, lazy-loading pattern)
+- Next.js project initialization ✔
+- design foundation (layout, typography, Tailwind setup) ✔
+- SEO foundation (metadata defaults, sitemap, robots, site URL config) ✔
+- processing architecture (lib boundaries, lazy-loading pattern) — established with the first tool
 
 ## Phase 1 — First Vertical Slice: PDF → JPG
 
