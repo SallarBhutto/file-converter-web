@@ -8,13 +8,9 @@ import { validatePdfFile } from "@/lib/files/validation";
 import { toPdfProcessingError } from "@/lib/pdf/errors";
 import { openPdfDocument, type PdfDocument } from "@/lib/pdf/loader";
 
-import { convertPdfToJpg } from "./convert-pdf-to-jpg";
-import { buildJpgArchive } from "./download-all";
-import {
-  DEFAULT_JPEG_QUALITY_PRESET,
-  getJpegQuality,
-  type JpegQualityPreset,
-} from "./quality-presets";
+import { convertPdfToImages } from "./convert-pdf-to-images";
+import { buildImageArchive } from "./download-all";
+import { getPresetQuality, type QualityPreset, type RasterFormatConfig } from "./formats";
 import { createPageResult, revokePageResults } from "./results";
 import type { ArchiveStatus, ConverterState, PageResult, SelectedPdf } from "./types";
 
@@ -47,9 +43,14 @@ function disposeSession(session: Session | null): void {
   session.document = null;
 }
 
-export function usePdfToJpg() {
+/**
+ * State and orchestration for one PDF-to-image tool. The output format is
+ * fixed per tool; everything else (file, presets, progress, results) lives
+ * here.
+ */
+export function usePdfToImage(format: RasterFormatConfig) {
   const [state, setState] = useState<ConverterState>({ status: "idle" });
-  const [preset, setPreset] = useState<JpegQualityPreset>(DEFAULT_JPEG_QUALITY_PRESET);
+  const [preset, setPreset] = useState<QualityPreset>(format.defaultPreset ?? "balanced");
   const [archiveStatus, setArchiveStatus] = useState<ArchiveStatus>("idle");
   const sessionRef = useRef<Session | null>(null);
 
@@ -140,8 +141,9 @@ export function usePdfToJpg() {
     });
 
     try {
-      await convertPdfToJpg(pdf, {
-        quality: getJpegQuality(preset),
+      await convertPdfToImages(pdf, {
+        format,
+        quality: getPresetQuality(format, preset),
         signal: run.signal,
         onProgress: (progress) => {
           if (!isCurrent()) return;
@@ -151,7 +153,10 @@ export function usePdfToJpg() {
         },
         onPage: (rendered) => {
           if (!isCurrent()) return;
-          session.results = [...session.results, createPageResult(rendered, session.file.stem)];
+          session.results = [
+            ...session.results,
+            createPageResult(rendered, session.file.stem, format.extension),
+          ];
           const results = session.results;
           setState((previous) =>
             previous.status === "converting" ? { ...previous, results } : previous,
@@ -176,7 +181,7 @@ export function usePdfToJpg() {
         message: failure.message,
       });
     }
-  }, [preset]);
+  }, [format, preset]);
 
   const cancel = useCallback(() => {
     const session = sessionRef.current;
@@ -203,14 +208,14 @@ export function usePdfToJpg() {
 
     setArchiveStatus("building");
     try {
-      const archive = await buildJpgArchive(session.results);
+      const archive = await buildImageArchive(session.results);
       if (sessionRef.current !== session) return;
-      downloadBlob(archive, buildArchiveFilename(session.file.stem, "jpg"));
+      downloadBlob(archive, buildArchiveFilename(session.file.stem, format.extension));
       setArchiveStatus("idle");
     } catch {
       if (sessionRef.current === session) setArchiveStatus("error");
     }
-  }, []);
+  }, [format.extension]);
 
   return {
     state,

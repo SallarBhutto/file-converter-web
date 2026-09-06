@@ -1,28 +1,32 @@
 import { useId } from "react";
 
-import {
-  JPEG_QUALITY_PRESETS,
-  getJpegQualityPreset,
-  isJpegQualityPreset,
-  type JpegQualityPreset,
-} from "../quality-presets";
+import { isQualityPreset, type QualityPreset, type QualityPresetDefinition } from "../formats";
 
 interface QualitySelectorProps {
-  value: JpegQualityPreset;
-  onChange: (preset: JpegQualityPreset) => void;
+  presets: readonly QualityPresetDefinition[];
+  /** Short format label for the legend, e.g. "JPG" → "JPG quality". */
+  formatLabel: string;
+  value: QualityPreset;
+  onChange: (preset: QualityPreset) => void;
   disabled?: boolean;
 }
 
 /** Three-way segmented radio group. Native radios keep keyboard behaviour free. */
-export function QualitySelector({ value, onChange, disabled = false }: QualitySelectorProps) {
+export function QualitySelector({
+  presets,
+  formatLabel,
+  value,
+  onChange,
+  disabled = false,
+}: QualitySelectorProps) {
   const name = useId();
-  const selected = getJpegQualityPreset(value);
+  const selected = presets.find((preset) => preset.id === value) ?? presets[0];
 
   return (
     <fieldset disabled={disabled} className="min-w-0">
-      <legend className="text-sm font-medium text-zinc-900">JPG quality</legend>
+      <legend className="text-sm font-medium text-zinc-900">{formatLabel} quality</legend>
       <div className="mt-2 grid grid-cols-3 gap-2">
-        {JPEG_QUALITY_PRESETS.map((preset) => (
+        {presets.map((preset) => (
           <label key={preset.id} className="cursor-pointer">
             <input
               type="radio"
@@ -30,7 +34,7 @@ export function QualitySelector({ value, onChange, disabled = false }: QualitySe
               value={preset.id}
               checked={preset.id === value}
               onChange={(event) => {
-                if (isJpegQualityPreset(event.target.value)) onChange(event.target.value);
+                if (isQualityPreset(event.target.value)) onChange(event.target.value);
               }}
               className="peer sr-only"
             />

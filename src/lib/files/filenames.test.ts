@@ -44,14 +44,24 @@ describe("deriveFileStem", () => {
 });
 
 describe("buildPageImageFilename", () => {
-  it("appends the page number and extension", () => {
-    expect(buildPageImageFilename("annual-report", 1, "jpg")).toBe("annual-report-page-1.jpg");
-    expect(buildPageImageFilename("annual-report", 12, "png")).toBe("annual-report-page-12.png");
+  it("builds JPG page names", () => {
+    expect(buildPageImageFilename("document", 1, "jpg")).toBe("document-page-1.jpg");
+  });
+
+  it("builds PNG page names", () => {
+    expect(buildPageImageFilename("document", 1, "png")).toBe("document-page-1.png");
+    expect(buildPageImageFilename("document", 12, "png")).toBe("document-page-12.png");
+  });
+
+  it("builds WebP page names", () => {
+    expect(buildPageImageFilename("document", 2, "webp")).toBe("document-page-2.webp");
   });
 });
 
 describe("buildArchiveFilename", () => {
   it("names the archive after the stem and format", () => {
-    expect(buildArchiveFilename("annual-report", "jpg")).toBe("annual-report-jpg.zip");
+    expect(buildArchiveFilename("document", "jpg")).toBe("document-jpg.zip");
+    expect(buildArchiveFilename("document", "png")).toBe("document-png.zip");
+    expect(buildArchiveFilename("document", "webp")).toBe("document-webp.zip");
   });
 });

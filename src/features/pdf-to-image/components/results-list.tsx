@@ -7,6 +7,8 @@ interface ResultsListProps {
   results: readonly PageResult[];
   /** Original PDF name, used for image alt text. */
   sourceName: string;
+  /** Short format label for headings and buttons, e.g. "PNG". */
+  formatLabel: string;
   /** True once every page has been rendered. */
   complete: boolean;
   archiveStatus: ArchiveStatus;
@@ -15,13 +17,14 @@ interface ResultsListProps {
 
 /**
  * Each card shows the small preview JPEG through a plain <img>; the full-size
- * JPEG is only referenced by the download link, so the browser never decodes
+ * image is only referenced by the download link, so the browser never decodes
  * a full-resolution page just to display a thumbnail. Preview boxes carry the
  * page's aspect ratio to avoid layout shift while images decode.
  */
 export function ResultsList({
   results,
   sourceName,
+  formatLabel,
   complete,
   archiveStatus,
   onDownloadAll,
@@ -34,7 +37,7 @@ export function ResultsList({
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 id="results-heading" className="text-lg font-semibold text-zinc-900">
-            {complete ? "Your JPG images" : "Converted so far"}
+            {complete ? `Your ${formatLabel} images` : "Converted so far"}
           </h2>
           <p className="mt-0.5 text-sm text-zinc-600" aria-live="polite">
             {count} {count === 1 ? "image" : "images"}
@@ -67,7 +70,7 @@ export function ResultsList({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={result.preview.objectUrl}
-                  alt={`Page ${result.pageNumber} of ${sourceName} as JPG`}
+                  alt={`Page ${result.pageNumber} of ${sourceName} as ${formatLabel}`}
                   width={result.preview.width}
                   height={result.preview.height}
                   loading="lazy"
@@ -85,7 +88,7 @@ export function ResultsList({
                   download={result.download.filename}
                   className={buttonClassName(single ? "primary" : "secondary", "shrink-0 px-3")}
                 >
-                  Download{single ? " JPG" : ""}
+                  Download{single ? ` ${formatLabel}` : ""}
                 </a>
               </figcaption>
             </figure>

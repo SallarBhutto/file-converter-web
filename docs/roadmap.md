@@ -26,15 +26,17 @@ reuses:
 - responsive UX
 - SEO tool-page pattern (see [seo.md](seo.md))
 
-## Phase 2 — PDF to Image (next)
+## Phase 2 — PDF to Image ✔
 
-- PDF → PNG
-- PDF → WebP
+- PDF → PNG ✔
+- PDF → WebP ✔
 
-Reuse the shared PDF rendering pipeline. These should be thin variants of the
-Phase 1 tool, differing only in encoder and content.
+Implemented at `/pdf-to-png` and `/pdf-to-webp` as thin variants of the
+Phase 1 tool. All three share `src/features/pdf-to-image/` and differ only
+by a format configuration (MIME type, extension, quality presets,
+background) plus their server-rendered page content.
 
-## Phase 3 — Image to PDF
+## Phase 3 — Image to PDF (next)
 
 - JPG → PDF
 - PNG → PDF

@@ -123,7 +123,20 @@ Web Worker, not the main-thread fallback.
 - `src/lib/pdf/renderer.ts` renders one page into a caller-owned canvas,
   encodes it with `canvas.toBlob` for any raster format, and optionally
   draws a downscaled JPEG preview from the same canvas before it is reused.
-  PDF → PNG and PDF → WebP reuse it by passing a different `format`.
+  It rejects the result if the browser silently substituted PNG for an
+  encoder it lacks (older Safari and WebP), surfacing an "unsupported"
+  product error instead of a mislabelled file.
+- Page background is chosen by `src/lib/pdf/background.ts`. PDF.js paints
+  opaque white behind every page by default and the PDF imaging model treats
+  a page as opaque paper, so every format, PNG included, renders on white.
+  A "transparent" plan exists for a deliberate future option, not because
+  PDF pages are transparent.
+- The three PDF-to-image tools share `src/features/pdf-to-image/`: one hook,
+  one page loop, one converter island, and one server-rendered page layout.
+  `formats.ts` holds the only per-format differences (MIME type, extension,
+  quality presets and their encoder values, background). Adding a raster
+  format means adding one config entry, one route with its content, and one
+  registry entry in `src/lib/tools.ts`.
 - Result previews are separate small JPEGs (longest side 480 px, quality
   0.7), never the full-size download image, so the browser only decodes
   thumbnails for display. Each result owns two object URLs, one per image,
@@ -222,7 +235,7 @@ src/
     tool/         # dropzone, progress, results (shared tool UI)
     ui/           # small primitives (button, select)
   features/
-    pdf-to-jpg/   # orchestration for one tool
+    pdf-to-image/ # shared PDF → JPG/PNG/WebP feature, format config per tool
   lib/
     files/        # validation, naming, size formatting
     pdf/          # PDF.js loading and rendering

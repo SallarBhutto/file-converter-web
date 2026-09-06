@@ -6,9 +6,13 @@ import type { PageResult } from "./types";
 /**
  * Wraps a rendered page in a result that owns two object URLs: one for the
  * full-size download and one for the small preview shown on screen. The
- * full-size JPEG is never used as an <img> source.
+ * full-size image is never used as an <img> source.
  */
-export function createPageResult(rendered: RenderedPage, stem: string): PageResult {
+export function createPageResult(
+  rendered: RenderedPage,
+  stem: string,
+  extension: string,
+): PageResult {
   if (!rendered.preview) {
     throw new Error("createPageResult requires a rendered preview");
   }
@@ -21,7 +25,7 @@ export function createPageResult(rendered: RenderedPage, stem: string): PageResu
     download: {
       blob: rendered.blob,
       objectUrl: URL.createObjectURL(rendered.blob),
-      filename: buildPageImageFilename(stem, rendered.pageNumber, "jpg"),
+      filename: buildPageImageFilename(stem, rendered.pageNumber, extension),
       size: rendered.blob.size,
     },
     preview: {

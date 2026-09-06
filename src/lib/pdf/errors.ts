@@ -3,6 +3,7 @@ export type PdfErrorCode =
   | "password"
   | "render"
   | "resources"
+  | "unsupported"
   | "cancelled"
   | "unknown";
 
@@ -13,6 +14,8 @@ const MESSAGES: Record<PdfErrorCode, string> = {
   render: "We couldn't render one of the PDF pages.",
   resources:
     "Your browser ran out of resources while processing this file. Try a smaller PDF or close other tabs.",
+  unsupported:
+    "Your browser can't create images in this format. Try a current version of Chrome, Firefox, Safari, or Edge.",
   cancelled: "Conversion was cancelled.",
   unknown: "Something went wrong while processing this PDF.",
 };

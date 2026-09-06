@@ -6,12 +6,15 @@ processed on a server, or stored.
 
 ## Status
 
-**PDF → JPG is implemented** at `/pdf-to-jpg`: pick a PDF, choose a quality
-preset, and download each page as a JPG or all pages as a ZIP. Everything runs
-in the browser with PDF.js.
+**Three PDF-to-image tools are implemented:** `/pdf-to-jpg`, `/pdf-to-png`,
+and `/pdf-to-webp`. Pick a PDF, choose a quality preset where the format has
+one, and download each page as an image or all pages as a ZIP. Everything
+runs in the browser with PDF.js; the three tools share one converter and
+differ only by a small format configuration.
 
-No other converter exists yet. See [docs/roadmap.md](docs/roadmap.md) for the
-order the remaining tools will be built in.
+No image-to-PDF or compression tool exists yet. See
+[docs/roadmap.md](docs/roadmap.md) for the order the remaining tools will be
+built in.
 
 ## Stack
 
@@ -57,8 +60,9 @@ npm run build
 ```
 
 Run all four before considering a change complete. Tests cover pure logic
-only: file validation, size formatting, filename generation, quality presets,
-progress, and render-dimension safeguards. See
+only: file validation, size formatting, filename generation, raster format
+configuration and quality presets, progress, canvas background planning, and
+render-dimension safeguards. See
 [docs/testing.md](docs/testing.md).
 
 ## Project knowledge base

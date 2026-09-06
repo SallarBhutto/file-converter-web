@@ -31,6 +31,7 @@ const principles = [
 ];
 
 const categories: readonly ToolCategory[] = ["pdf-to-image", "image-to-pdf", "compression"];
+const plannedCategories = categories.filter((category) => plannedTools[category].length > 0);
 
 export default function HomePage() {
   return (
@@ -76,7 +77,7 @@ export default function HomePage() {
             Planned
           </h3>
           <div className="mt-4 grid gap-6 sm:grid-cols-3">
-            {categories.map((category) => (
+            {plannedCategories.map((category) => (
               <div key={category}>
                 <p className="text-sm font-medium text-zinc-700">{toolCategoryLabels[category]}</p>
                 <ul className="mt-2 space-y-1 text-sm text-zinc-500">

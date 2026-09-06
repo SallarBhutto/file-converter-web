@@ -3,6 +3,7 @@ import type { PdfDocument } from "@/lib/pdf/loader";
 import { releaseCanvas, renderPageToBlob } from "@/lib/pdf/renderer";
 import type { RenderedPage } from "@/lib/pdf/types";
 
+import type { RasterFormatConfig } from "./formats";
 import type { ConversionProgress } from "./progress";
 
 /**
@@ -15,24 +16,25 @@ export const PREVIEW_MAX_SIDE = 480;
 /** Previews are display-only, so a lower JPEG quality than any download preset. */
 export const PREVIEW_JPEG_QUALITY = 0.7;
 
-export interface ConvertPdfToJpgOptions {
-  /** JPEG encoder quality in [0, 1]. */
-  quality: number;
+export interface ConvertPdfToImagesOptions {
+  format: RasterFormatConfig;
+  /** Encoder quality in [0, 1]; undefined for formats without presets. */
+  quality: number | undefined;
   signal: AbortSignal;
   onProgress: (progress: ConversionProgress) => void;
   onPage: (page: RenderedPage) => void;
 }
 
 /**
- * Renders every page of an open document to JPEG, strictly one page at a
- * time. One full-size render canvas and one small preview canvas are reused
- * for the whole run and released at the end, so peak main-thread memory is a
- * single page's bitmap plus the encoded Blobs the caller chooses to keep.
- * Stops at the first abort or error.
+ * Renders every page of an open document to the requested raster format,
+ * strictly one page at a time. One full-size render canvas and one small
+ * preview canvas are reused for the whole run and released at the end, so
+ * peak main-thread memory is a single page's bitmap plus the encoded Blobs
+ * the caller chooses to keep. Stops at the first abort or error.
  */
-export async function convertPdfToJpg(
+export async function convertPdfToImages(
   pdf: PdfDocument,
-  { quality, signal, onProgress, onPage }: ConvertPdfToJpgOptions,
+  { format, quality, signal, onProgress, onPage }: ConvertPdfToImagesOptions,
 ): Promise<void> {
   const totalPages = pdf.pageCount;
   const renderCanvas = document.createElement("canvas");
@@ -45,8 +47,9 @@ export async function convertPdfToJpg(
 
       const page = await pdf.getPage(pageNumber);
       const rendered = await renderPageToBlob(page, renderCanvas, {
-        format: "image/jpeg",
+        format: format.mimeType,
         quality,
+        background: format.background,
         preview: {
           canvas: previewCanvas,
           maxSide: PREVIEW_MAX_SIDE,

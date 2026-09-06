@@ -1,5 +1,6 @@
 import type { PDFPageProxy } from "pdfjs-dist";
 
+import { planCanvasBackground } from "./background";
 import { computePreviewDimensions, computeRenderDimensions } from "./canvas-limits";
 import { PdfProcessingError, throwIfAborted, toPdfProcessingError } from "./errors";
 import type { PreviewOptions, RenderPageOptions, RenderedPage, RenderedPreview } from "./types";
@@ -19,8 +20,17 @@ function canvasToBlob(
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
-        if (blob) resolve(blob);
-        else reject(new PdfProcessingError("resources"));
+        if (!blob) {
+          reject(new PdfProcessingError("resources"));
+          return;
+        }
+        // Browsers silently fall back to PNG for encoders they lack (older
+        // Safari and WebP, for example). Refuse rather than mislabel a file.
+        if (blob.type !== format) {
+          reject(new PdfProcessingError("unsupported"));
+          return;
+        }
+        resolve(blob);
       },
       format,
       quality,
@@ -37,7 +47,8 @@ export function releaseCanvas(canvas: HTMLCanvasElement): void {
 /**
  * Downscales the freshly rendered page into the small preview canvas and
  * encodes it as JPEG. Drawing from the render canvas while it is still
- * populated avoids a second full-size render or decode.
+ * populated avoids a second full-size render or decode. Previews are always
+ * opaque; a transparent page would be composited onto white here.
  */
 async function renderPreview(
   source: HTMLCanvasElement,
@@ -49,6 +60,8 @@ async function renderPreview(
 
   const context = canvas.getContext("2d", { alpha: false });
   if (!context) throw new PdfProcessingError("resources");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, width, height);
   context.imageSmoothingEnabled = true;
   context.imageSmoothingQuality = "high";
   context.drawImage(source, 0, 0, width, height);
@@ -58,11 +71,12 @@ async function renderPreview(
 }
 
 /**
- * Renders one page into `canvas` and encodes it as a Blob, optionally with a
- * downscaled JPEG preview. The same canvases are reused across pages: their
- * backing stores are resized per page and the caller releases them after the
- * last page. The page proxy is cleaned up before returning so PDF.js does
- * not cache page resources on the main thread.
+ * Renders one page into `canvas` and encodes it as a Blob in the requested
+ * format, optionally with a downscaled JPEG preview. The same canvases are
+ * reused across pages: their backing stores are resized per page and the
+ * caller releases them after the last page. The page proxy is cleaned up
+ * before returning so PDF.js does not cache page resources on the main
+ * thread.
  */
 export async function renderPageToBlob(
   page: PDFPageProxy,
@@ -70,6 +84,7 @@ export async function renderPageToBlob(
   options: RenderPageOptions,
 ): Promise<RenderedPage> {
   const { format, quality, targetDpi, preview, signal } = options;
+  const background = planCanvasBackground(options.background ?? "white");
   throwIfAborted(signal);
 
   const baseViewport = page.getViewport({ scale: 1 });
@@ -83,12 +98,19 @@ export async function renderPageToBlob(
   canvas.width = width;
   canvas.height = height;
 
-  const context = canvas.getContext("2d", { alpha: false });
+  const context = canvas.getContext("2d", { alpha: background.contextAlpha });
   if (!context) throw new PdfProcessingError("resources");
-  context.fillStyle = "#ffffff";
-  context.fillRect(0, 0, width, height);
+  if (background.fillStyle) {
+    context.fillStyle = background.fillStyle;
+    context.fillRect(0, 0, width, height);
+  }
 
-  const renderTask = page.render({ canvas, viewport, intent: "print" });
+  const renderTask = page.render({
+    canvas,
+    viewport,
+    intent: "print",
+    background: background.pdfjsBackground,
+  });
   const onAbort = () => renderTask.cancel();
   signal?.addEventListener("abort", onAbort, { once: true });
 

@@ -21,6 +21,20 @@ export const tools: readonly ToolDefinition[] = [
     description: "Turn every page of a PDF into a JPG image.",
     category: "pdf-to-image",
   },
+  {
+    slug: "pdf-to-png",
+    path: "/pdf-to-png",
+    name: "PDF to PNG",
+    description: "Turn every page of a PDF into a lossless PNG image.",
+    category: "pdf-to-image",
+  },
+  {
+    slug: "pdf-to-webp",
+    path: "/pdf-to-webp",
+    name: "PDF to WebP",
+    description: "Turn every page of a PDF into a compact WebP image.",
+    category: "pdf-to-image",
+  },
 ];
 
 export const toolCategoryLabels: Record<ToolCategory, string> = {
@@ -31,7 +45,7 @@ export const toolCategoryLabels: Record<ToolCategory, string> = {
 
 /** Committed tools that have no route yet. Names only, never links. */
 export const plannedTools: Record<ToolCategory, readonly string[]> = {
-  "pdf-to-image": ["PDF to PNG", "PDF to WebP"],
+  "pdf-to-image": [],
   "image-to-pdf": ["JPG to PDF", "PNG to PDF", "WebP to PDF"],
   compression: ["Compress JPG", "Compress PNG", "Compress WebP", "Compress PDF"],
 };

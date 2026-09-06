@@ -4,7 +4,8 @@ import { FileDropzone } from "@/components/tool/file-dropzone";
 import { PrivacyNote } from "@/components/tool/privacy-note";
 import { Button } from "@/components/ui/button";
 
-import { usePdfToJpg } from "../use-pdf-to-jpg";
+import { getRasterFormat, type RasterOutputFormat } from "../formats";
+import { usePdfToImage } from "../use-pdf-to-image";
 import { ConversionProgressPanel } from "./conversion-progress";
 import { QualitySelector } from "./quality-selector";
 import { ResultsList } from "./results-list";
@@ -18,14 +19,20 @@ function ErrorMessage({ message }: { message: string }) {
   );
 }
 
+interface PdfToImageConverterProps {
+  /** Output format for this tool page. Resolved to its config on the client. */
+  format: RasterOutputFormat;
+}
+
 /**
- * The interactive island for /pdf-to-jpg. Everything around it is
- * server-rendered; this component only owns the file, options, progress, and
- * results. PDF.js is not loaded until a file is accepted.
+ * The interactive island shared by every PDF-to-image tool page. Everything
+ * around it is server-rendered; this component only owns the file, options,
+ * progress, and results. PDF.js is not loaded until a file is accepted.
  */
-export function PdfToJpgConverter() {
+export function PdfToImageConverter({ format }: PdfToImageConverterProps) {
+  const config = getRasterFormat(format);
   const { state, preset, setPreset, archiveStatus, selectFile, convert, cancel, reset, downloadAll } =
-    usePdfToJpg();
+    usePdfToImage(config);
 
   if (state.status === "idle" || (state.status === "error" && state.file === null)) {
     return (
@@ -39,7 +46,7 @@ export function PdfToJpgConverter() {
           accept="application/pdf,.pdf"
           buttonLabel="Choose PDF"
           hint="or drag and drop a PDF here"
-          details="One PDF at a time. Every page becomes a JPG."
+          details={`One PDF at a time. Every page becomes a ${config.label}.`}
           onFileSelected={selectFile}
         />
         <PrivacyNote className="mt-4 justify-center" />
@@ -55,10 +62,11 @@ export function PdfToJpgConverter() {
   const pageCount = "pageCount" in state ? state.pageCount : null;
   const canRetry = state.status === "error" && state.pageCount !== null;
   const showOptions =
-    state.status === "ready" ||
-    state.status === "converting" ||
-    state.status === "complete" ||
-    canRetry;
+    config.qualityPresets !== null &&
+    (state.status === "ready" ||
+      state.status === "converting" ||
+      state.status === "complete" ||
+      canRetry);
   const results =
     state.status === "converting" || state.status === "complete" ? state.results : [];
 
@@ -74,8 +82,10 @@ export function PdfToJpgConverter() {
 
       {state.status === "error" ? <ErrorMessage message={state.message} /> : null}
 
-      {showOptions ? (
+      {showOptions && config.qualityPresets ? (
         <QualitySelector
+          presets={config.qualityPresets}
+          formatLabel={config.label}
           value={preset}
           onChange={setPreset}
           disabled={state.status === "converting"}
@@ -84,7 +94,7 @@ export function PdfToJpgConverter() {
 
       {state.status === "ready" ? (
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Button onClick={convert}>Convert to JPG</Button>
+          <Button onClick={convert}>Convert to {config.label}</Button>
           <PrivacyNote />
         </div>
       ) : null}
@@ -99,6 +109,7 @@ export function PdfToJpgConverter() {
         <ResultsList
           results={results}
           sourceName={file.name}
+          formatLabel={config.label}
           complete={state.status === "complete"}
           archiveStatus={archiveStatus}
           onDownloadAll={downloadAll}
@@ -107,9 +118,11 @@ export function PdfToJpgConverter() {
 
       {state.status === "complete" ? (
         <div className="flex flex-wrap gap-3 border-t border-zinc-200 pt-6">
-          <Button variant="secondary" onClick={convert}>
-            Convert again
-          </Button>
+          {config.qualityPresets ? (
+            <Button variant="secondary" onClick={convert}>
+              Convert again
+            </Button>
+          ) : null}
           <Button variant="ghost" onClick={reset}>
             Convert another PDF
           </Button>

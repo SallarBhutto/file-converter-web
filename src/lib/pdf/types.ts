@@ -1,3 +1,5 @@
+import type { CanvasBackground } from "./background";
+
 /** Raster formats the shared renderer can encode. */
 export type RasterFormat = "image/jpeg" | "image/png" | "image/webp";
 
@@ -17,6 +19,8 @@ export interface RenderPageOptions {
   format: RasterFormat;
   /** Encoder quality in [0, 1]; ignored by lossless formats. */
   quality?: number;
+  /** Page background. Defaults to "white"; see background.ts. */
+  background?: CanvasBackground;
   /** Rendering density relative to the PDF's 72 pt/inch. Defaults to 150. */
   targetDpi?: number;
   /** When set, a downscaled JPEG preview is produced from the same render. */
