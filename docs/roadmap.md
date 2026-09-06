@@ -36,21 +36,19 @@ Phase 1 tool. All three share `src/features/pdf-to-image/` and differ only
 by a format configuration (MIME type, extension, quality presets,
 background) plus their server-rendered page content.
 
-## Phase 3 — Image to PDF (next)
+## Phase 3 — Image to PDF ✔
 
-- JPG → PDF
-- PNG → PDF
-- WebP → PDF
-- eventually mixed image batches
+- JPG → PDF ✔
+- PNG → PDF ✔
+- WebP → PDF ✔
+- mixed image batches — not yet; each route accepts one format
 
-Include where useful:
+Implemented at `/jpg-to-pdf`, `/png-to-pdf` and `/webp-to-pdf` on one
+shared feature, `src/features/image-to-pdf/`, with reorder (drag and drop
+plus move buttons), page size (A4, Letter, Fit to image), orientation
+(Auto, Portrait, Landscape) and margins (None, Small, Medium).
 
-- reorder
-- page sizing
-- orientation
-- margins
-
-## Phase 4 — Image Compression
+## Phase 4 — Image Compression (next)
 
 - Compress JPG
 - Compress PNG

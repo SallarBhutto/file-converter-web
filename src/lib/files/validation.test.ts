@@ -29,7 +29,7 @@ describe("validatePdfFile", () => {
     const result = validatePdfFile({ name: "photo.png", type: "image/png", size: 10 });
     expect(result).toEqual({
       ok: false,
-      reason: "not-pdf",
+      reason: "wrong-format",
       message: "Please choose a PDF file.",
     });
   });

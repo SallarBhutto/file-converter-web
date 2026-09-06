@@ -5,7 +5,12 @@ import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import { siteConfig } from "@/lib/seo/site-config";
-import { plannedTools, toolCategoryLabels, tools, type ToolCategory } from "@/lib/tools";
+import {
+  getToolsByCategory,
+  plannedTools,
+  toolCategories,
+  toolCategoryLabels,
+} from "@/lib/tools";
 
 export const metadata: Metadata = buildPageMetadata({
   // The root layout title template does not apply to the root segment, so the
@@ -30,8 +35,8 @@ const principles = [
   },
 ];
 
-const categories: readonly ToolCategory[] = ["pdf-to-image", "image-to-pdf", "compression"];
-const plannedCategories = categories.filter((category) => plannedTools[category].length > 0);
+const liveCategories = toolCategories.filter((category) => getToolsByCategory(category).length > 0);
+const plannedCategories = toolCategories.filter((category) => plannedTools[category].length > 0);
 
 export default function HomePage() {
   return (
@@ -59,35 +64,46 @@ export default function HomePage() {
             title="Tools"
             description="Each tool gets its own page here as it becomes available. More converters are on the way."
           />
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {tools.map((tool) => (
-              <li key={tool.slug}>
-                <Link
-                  href={tool.path}
-                  className="block rounded-lg border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-400"
-                >
-                  <span className="block text-base font-semibold text-zinc-900">{tool.name}</span>
-                  <span className="mt-1 block text-sm text-zinc-600">{tool.description}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          {liveCategories.map((category) => (
+            <div key={category} className="mt-10">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+                {toolCategoryLabels[category]}
+              </h3>
+              <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {getToolsByCategory(category).map((tool) => (
+                  <li key={tool.slug}>
+                    <Link
+                      href={tool.path}
+                      className="block rounded-lg border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-400"
+                    >
+                      <span className="block text-base font-semibold text-zinc-900">{tool.name}</span>
+                      <span className="mt-1 block text-sm text-zinc-600">{tool.description}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
-          <h3 className="mt-12 text-sm font-semibold uppercase tracking-wide text-zinc-500">
-            Planned
-          </h3>
-          <div className="mt-4 grid gap-6 sm:grid-cols-3">
-            {plannedCategories.map((category) => (
-              <div key={category}>
-                <p className="text-sm font-medium text-zinc-700">{toolCategoryLabels[category]}</p>
-                <ul className="mt-2 space-y-1 text-sm text-zinc-500">
-                  {plannedTools[category].map((name) => (
-                    <li key={name}>{name}</li>
-                  ))}
-                </ul>
+          {plannedCategories.length > 0 ? (
+            <>
+              <h3 className="mt-12 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+                Planned
+              </h3>
+              <div className="mt-4 grid gap-6 sm:grid-cols-3">
+                {plannedCategories.map((category) => (
+                  <div key={category}>
+                    <p className="text-sm font-medium text-zinc-700">{toolCategoryLabels[category]}</p>
+                    <ul className="mt-2 space-y-1 text-sm text-zinc-500">
+                      {plannedTools[category].map((name) => (
+                        <li key={name}>{name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : null}
         </Container>
       </section>
 

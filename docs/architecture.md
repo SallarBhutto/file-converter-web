@@ -165,12 +165,41 @@ clicks "Download All". Entries are stored rather than deflated because
 JPEG/PNG/WebP data does not compress further, and files are fed in one at a
 time so at most one page's bytes are duplicated while the archive is built.
 
-## Image → PDF
+## Image → PDF (implemented)
 
-A lightweight client-side PDF library such as `pdf-lib` may be used when
-implementation reaches this feature. This is not locked in. Verify current
-suitability, maintenance status, and bundle size at implementation time and
-record the choice in `decisions.md`.
+`jsPDF` builds the PDF in the browser. It was chosen over `pdf-lib` because
+it is actively maintained (pdf-lib has had no release since 2022), ships an
+ESM build, accepts `Uint8Array` image data without base64, emits a Blob, and
+already depends on `fflate`, which the ZIP download uses. It is imported
+dynamically inside `src/features/image-to-pdf/generate-pdf.ts`, so it loads
+only when someone presses Create PDF, never on page load or other routes.
+Its optional `html2canvas`, `canvg` and `dompurify` integrations are reached
+only through dynamic imports this code never triggers.
+
+How images reach the page:
+
+- JPEG bytes are embedded unchanged. If the file carries an EXIF orientation
+  other than 1 (typical for phone photos), it is decoded with
+  `createImageBitmap({ imageOrientation: "from-image" })`, drawn to a canvas
+  and re-encoded as JPEG at quality 0.92, because jsPDF ignores EXIF.
+  `src/lib/image/exif-orientation.ts` reads the tag without any dependency.
+- PNG bytes are embedded unchanged; alpha becomes a soft mask over the white
+  page. PNGs jsPDF's own parser rejects are normalised through a canvas and
+  retried as 8-bit RGBA PNG.
+- WebP has no PDF codec, so it is decoded by the browser and embedded as
+  JPEG at quality 0.92 on a white background.
+
+Layout maths live in `src/features/image-to-pdf/layout.ts`: A4 and Letter in
+points, margins of 0/10/20 mm, contain-fit with centring (upscaling allowed;
+placement is a vector transform), Auto orientation from each image's aspect,
+and Fit to image at 96 px/in capped at the 14400 pt PDF page limit while
+preserving aspect ratio.
+
+Memory: images are decoded one at a time both at selection (to read
+dimensions and draw a 320 px thumbnail) and during generation; every
+`ImageBitmap` is closed after use; the original `File` objects are the only
+full-size data retained. Thumbnail and result object URLs are revoked on
+remove, reset, regeneration, stale result and unmount.
 
 ## Memory Management
 
@@ -236,10 +265,11 @@ src/
     ui/           # small primitives (button, select)
   features/
     pdf-to-image/ # shared PDF → JPG/PNG/WebP feature, format config per tool
+    image-to-pdf/ # shared JPG/PNG/WebP → PDF feature, format config per tool
   lib/
     files/        # validation, naming, size formatting
     pdf/          # PDF.js loading and rendering
-    image/        # canvas encoding, compression
+    image/        # browser decoding, canvas encoding, EXIF orientation
     seo/          # metadata helpers, site URL config
   types/
 ```

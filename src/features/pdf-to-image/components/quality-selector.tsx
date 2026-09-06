@@ -1,6 +1,6 @@
-import { useId } from "react";
+import { SegmentedRadioGroup } from "@/components/tool/segmented-radio-group";
 
-import { isQualityPreset, type QualityPreset, type QualityPresetDefinition } from "../formats";
+import type { QualityPreset, QualityPresetDefinition } from "../formats";
 
 interface QualitySelectorProps {
   presets: readonly QualityPresetDefinition[];
@@ -11,7 +11,6 @@ interface QualitySelectorProps {
   disabled?: boolean;
 }
 
-/** Three-way segmented radio group. Native radios keep keyboard behaviour free. */
 export function QualitySelector({
   presets,
   formatLabel,
@@ -19,32 +18,13 @@ export function QualitySelector({
   onChange,
   disabled = false,
 }: QualitySelectorProps) {
-  const name = useId();
-  const selected = presets.find((preset) => preset.id === value) ?? presets[0];
-
   return (
-    <fieldset disabled={disabled} className="min-w-0">
-      <legend className="text-sm font-medium text-zinc-900">{formatLabel} quality</legend>
-      <div className="mt-2 grid grid-cols-3 gap-2">
-        {presets.map((preset) => (
-          <label key={preset.id} className="cursor-pointer">
-            <input
-              type="radio"
-              name={name}
-              value={preset.id}
-              checked={preset.id === value}
-              onChange={(event) => {
-                if (isQualityPreset(event.target.value)) onChange(event.target.value);
-              }}
-              className="peer sr-only"
-            />
-            <span className="flex min-h-11 items-center justify-center rounded-md border border-zinc-300 bg-white px-2 text-center text-sm font-medium text-zinc-700 transition-colors peer-checked:border-accent peer-checked:bg-accent-soft peer-checked:text-accent peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent peer-disabled:cursor-not-allowed peer-disabled:opacity-50">
-              {preset.label}
-            </span>
-          </label>
-        ))}
-      </div>
-      <p className="mt-2 text-sm text-zinc-600">{selected.description}</p>
-    </fieldset>
+    <SegmentedRadioGroup
+      legend={`${formatLabel} quality`}
+      options={presets}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+    />
   );
 }

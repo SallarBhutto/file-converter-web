@@ -13,32 +13,39 @@ interface FileDropzoneProps {
   hint: string;
   /** Small print, e.g. accepted formats. */
   details?: string;
+  /** Allow selecting or dropping several files at once. */
+  multiple?: boolean;
+  /** Tighter padding for an "add more" zone under an existing list. */
+  compact?: boolean;
   disabled?: boolean;
-  onFileSelected: (file: File) => void;
+  onFilesSelected: (files: File[]) => void;
 }
 
 /**
- * Single-file picker. The real `<input type="file">` is visually hidden but
- * stays in the tab order, so keyboard users activate it like any control and
- * the visible label shows its focus ring. Clicking anywhere in the zone opens
- * the picker; desktop users can also drop a file onto it.
+ * File picker. The real `<input type="file">` is visually hidden but stays
+ * in the tab order, so keyboard users activate it like any control and the
+ * visible label shows its focus ring. Clicking anywhere in the zone opens
+ * the picker; desktop users can also drop files onto it.
  */
 export function FileDropzone({
   accept,
   buttonLabel,
   hint,
   details,
+  multiple = false,
+  compact = false,
   disabled = false,
-  onFileSelected,
+  onFilesSelected,
 }: FileDropzoneProps) {
   const inputId = useId();
   const detailsId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
 
-  const acceptFiles = (files: FileList | null) => {
-    const file = files?.[0];
-    if (file) onFileSelected(file);
+  const acceptFiles = (list: FileList | null) => {
+    const files = Array.from(list ?? []);
+    if (files.length === 0) return;
+    onFilesSelected(multiple ? files : files.slice(0, 1));
   };
 
   const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
@@ -65,7 +72,9 @@ export function FileDropzone({
       onDragLeave={() => setDragActive(false)}
       onDrop={handleDrop}
       onClick={handleZoneClick}
-      className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 py-12 text-center transition-colors ${
+      className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed px-6 text-center transition-colors ${
+        compact ? "py-6" : "py-12"
+      } ${
         dragActive
           ? "border-accent bg-accent-soft"
           : "border-zinc-300 bg-zinc-50 hover:border-zinc-400"
@@ -76,6 +85,7 @@ export function FileDropzone({
         id={inputId}
         type="file"
         accept={accept}
+        multiple={multiple}
         disabled={disabled}
         aria-describedby={details ? detailsId : undefined}
         className="peer sr-only"
@@ -88,13 +98,13 @@ export function FileDropzone({
       <label
         htmlFor={inputId}
         className={buttonClassName(
-          "primary",
+          compact ? "secondary" : "primary",
           "cursor-pointer peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent",
         )}
       >
         {buttonLabel}
       </label>
-      <p className="mt-4 text-sm text-zinc-600">{hint}</p>
+      <p className={`text-sm text-zinc-600 ${compact ? "mt-2" : "mt-4"}`}>{hint}</p>
       {details ? (
         <p id={detailsId} className="mt-1 text-xs text-zinc-500">
           {details}

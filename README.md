@@ -6,15 +6,19 @@ processed on a server, or stored.
 
 ## Status
 
-**Three PDF-to-image tools are implemented:** `/pdf-to-jpg`, `/pdf-to-png`,
-and `/pdf-to-webp`. Pick a PDF, choose a quality preset where the format has
-one, and download each page as an image or all pages as a ZIP. Everything
-runs in the browser with PDF.js; the three tools share one converter and
-differ only by a small format configuration.
+**Six tools are implemented.**
 
-No image-to-PDF or compression tool exists yet. See
-[docs/roadmap.md](docs/roadmap.md) for the order the remaining tools will be
-built in.
+- PDF to image: `/pdf-to-jpg`, `/pdf-to-png`, `/pdf-to-webp`. Pick a PDF,
+  choose a quality preset where the format has one, and download each page
+  as an image or all pages as a ZIP. Rendering uses PDF.js.
+- Image to PDF: `/jpg-to-pdf`, `/png-to-pdf`, `/webp-to-pdf`. Select one or
+  many images, arrange the order, choose page size, orientation and margin,
+  and download a single PDF. Generation uses jsPDF.
+
+Everything runs in the browser. Each family shares one converter and
+differs only by a small format configuration.
+
+No compression tool exists yet. See [docs/roadmap.md](docs/roadmap.md).
 
 ## Stack
 
@@ -23,6 +27,7 @@ built in.
 - TypeScript (strict)
 - Tailwind CSS 4
 - PDF.js (`pdfjs-dist`) for PDF rendering, loaded on demand
+- jsPDF for building PDFs from images, loaded on demand
 - fflate for in-browser ZIP creation, loaded on demand
 - Vitest for unit tests
 - ESLint, npm
@@ -60,9 +65,10 @@ npm run build
 ```
 
 Run all four before considering a change complete. Tests cover pure logic
-only: file validation, size formatting, filename generation, raster format
-configuration and quality presets, progress, canvas background planning, and
-render-dimension safeguards. See
+only: file validation, size formatting, filename generation, format
+configuration and quality presets, progress, canvas background planning,
+render-dimension safeguards, page layout maths, EXIF orientation parsing, and
+list reordering. See
 [docs/testing.md](docs/testing.md).
 
 ## Project knowledge base

@@ -47,7 +47,7 @@ export function PdfToImageConverter({ format }: PdfToImageConverterProps) {
           buttonLabel="Choose PDF"
           hint="or drag and drop a PDF here"
           details={`One PDF at a time. Every page becomes a ${config.label}.`}
-          onFileSelected={selectFile}
+          onFilesSelected={(files) => selectFile(files[0])}
         />
         <PrivacyNote className="mt-4 justify-center" />
       </div>
