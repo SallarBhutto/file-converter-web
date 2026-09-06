@@ -67,10 +67,16 @@ export function useImageCompression(format: CompressibleFormatConfig) {
   const [archiveStatus, setArchiveStatus] = useState<ArchiveStatus>("idle");
   const sessionRef = useRef<Session>(createSession(defaultPreset));
 
+  // Dispose on unmount, then install a fresh session so the ref never keeps
+  // pointing at an aborted one. React Strict Mode runs this cleanup once on
+  // mount in development; without the replacement every later file read
+  // would be treated as cancelled and the pending counter would never clear.
   useEffect(() => {
-    const session = sessionRef.current;
-    return () => disposeSession(session);
-  }, []);
+    return () => {
+      disposeSession(sessionRef.current);
+      sessionRef.current = createSession(defaultPreset);
+    };
+  }, [defaultPreset]);
 
   /** Mirror the session into React state, with an optional patch on top. */
   const sync = useCallback((patch: Partial<ImageCompressionState> = {}) => {
