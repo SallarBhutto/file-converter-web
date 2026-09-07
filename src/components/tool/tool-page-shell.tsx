@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { TrustList } from "@/components/ui/trust-list";
 import { getRelatedTools } from "@/lib/tools";
 
 interface ToolPageShellProps {
@@ -19,9 +20,11 @@ interface ToolPageShellProps {
 }
 
 /**
- * Server-rendered frame shared by every tool page: hero with the H1, the
- * converter island, the supporting content, and registry-driven related
- * tools. Content arrives as props so each route stays explicit.
+ * Server-rendered frame shared by every tool page: hero with the H1, intro
+ * and one trust line (privacy is stated once by the note beside the
+ * dropzone), the converter island, the supporting content, and
+ * registry-driven related tools. Content arrives as props so each route
+ * stays explicit.
  */
 export function ToolPageShell({
   path,
@@ -44,6 +47,7 @@ export function ToolPageShell({
             {heading}
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600">{intro}</p>
+          <TrustList label="What to expect" items={["Free to use", "No sign-up required"]} className="mt-6" />
         </Container>
       </section>
 

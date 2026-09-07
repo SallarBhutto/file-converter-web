@@ -1,12 +1,42 @@
-# File Converter Web — Product
+# FileHush — Product
 
 Source of truth for what the product is and why. Technical design lives in
 [architecture.md](architecture.md); search strategy in [seo.md](seo.md).
 
+## Brand and Domain
+
+- Public brand: **FileHush**
+- Production domain: **filehush.org** (`https://filehush.org`), supplied to
+  the app only through `NEXT_PUBLIC_SITE_URL` (see D008 and D010 in
+  [decisions.md](decisions.md))
+- Repository, package and project folder: `file-converter-web`. This is a
+  technical name and is not shown to users.
+
+Core positioning:
+
+> Free file tools. No sign-up. Your files never leave your device.
+
+The three primary benefits:
+
+1. Free to use
+2. No sign-up required
+3. File processing happens locally in the browser
+
+This positioning is brand strategy, not page copy. On any single page each
+benefit is stated once where it matters (the hero and the privacy section on
+the homepage; the trust line and the dropzone note on tool pages), and the
+full tagline is not repeated section by section. Each section has one job:
+the hero explains the product, the tools section says what users can do,
+the privacy section explains the privacy model, and the footer identifies
+the brand.
+
+Prefer "No sign-up required" over "No login required" in marketing copy.
+
 ## Product Purpose
 
-File Converter Web is a free, privacy-first collection of browser-based file
-conversion and compression tools.
+FileHush is a free, privacy-first collection of browser-based file
+conversion and compression tools. No account exists and none is required;
+every current tool is free and adds no watermark.
 
 Key differentiator: **Your files never leave your device.**
 
@@ -29,10 +59,10 @@ than spam-heavy converter websites.
 - trustworthy UI
 - useful without registration
 
-## Initial Tool Categories
+## Tool Categories
 
-These are the committed tool set. None are implemented yet; see
-[roadmap.md](roadmap.md) for build order.
+All ten tools below are implemented; see [roadmap.md](roadmap.md) for
+build history and what comes next.
 
 **PDF to Image**
 - PDF → JPG
@@ -125,11 +155,15 @@ Do not assume these will be built.
 
 Messaging themes:
 
-- "Processed securely in your browser"
+- "Processed locally in your browser"
 - "Your files never leave your device"
-- "No uploads"
-- "No file storage"
+- "No file uploads"
+- "FileHush does not send your files to our servers for processing"
+- "Free to use", "No sign-up required"
 
 Only use statements that remain technically accurate for the tool they appear
-on. If any future decision moves processing off-device for a tool, that tool's
-messaging must change in the same task.
+on. Avoid claims about browser or device internals that cannot be guaranteed
+everywhere (for example "close the tab and nothing is left behind"); say what
+FileHush does and does not do instead. If any future decision moves
+processing off-device for a tool, that tool's messaging must change in the
+same task.

@@ -25,7 +25,7 @@ export default function CompressPngPage() {
         "Compare the sizes. Files that were already optimized are kept unchanged.",
         "Download each image or all of them as a ZIP.",
       ]}
-      privacy="Your images are optimized by your browser using a WebAssembly build of OxiPNG. No file is sent to a server, nothing is stored, and closing the tab discards everything."
+      privacy="Your images are optimized by your browser using a WebAssembly build of OxiPNG. No file is sent to a server or stored remotely. Your images exist only in your browser's memory while this page is open."
       formatSection={{
         title: "Why PNG savings are smaller",
         description:

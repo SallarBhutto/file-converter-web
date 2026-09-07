@@ -1,4 +1,4 @@
-# File Converter Web — Testing
+# FileHush — Testing
 
 Pragmatic strategy. Simple UI does not need excessive testing. Prioritize
 high-value tests around logic that is easy to get wrong.

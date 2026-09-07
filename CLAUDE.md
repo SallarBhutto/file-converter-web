@@ -1,7 +1,8 @@
-# File Converter Web — Project Memory
+# FileHush — Project Memory
 
-Free, privacy-first, browser-based file conversion and compression tools.
-Files are processed locally in the user's browser. They never leave the device.
+FileHush (repository `file-converter-web`) is a free, privacy-first, browser-based
+collection of file conversion and compression tools. Free to use, no sign-up,
+and files are processed locally in the user's browser. They never leave the device.
 
 `AGENTS.md` is managed by Next.js and is not part of this knowledge base.
 

@@ -1,4 +1,4 @@
-# File Converter Web — Coding Standards
+# FileHush — Coding Standards
 
 Concise rules for code written in this repository. Architecture boundaries
 are in [architecture.md](architecture.md); test expectations in

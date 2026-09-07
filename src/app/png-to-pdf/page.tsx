@@ -25,7 +25,7 @@ export default function PngToPdfPage() {
         "Pick a page size, orientation, and margin.",
         "Press Create PDF, then download the finished file.",
       ]}
-      privacy="Your images are read and placed into the PDF by your browser. No file is sent to a server, nothing is stored, and closing the tab discards everything."
+      privacy="Your images are read and placed into the PDF by your browser. No file is sent to a server or stored remotely. Your images exist only in your browser's memory while this page is open."
       formatSection={{
         title: "How PNG images are placed",
         description:

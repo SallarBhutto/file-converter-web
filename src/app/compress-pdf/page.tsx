@@ -24,7 +24,7 @@ export default function CompressPdfPage() {
         "Press Compress PDF and wait for the result.",
         "Compare the sizes, then download the compressed PDF.",
       ]}
-      privacy="Preserve and Balanced run qpdf as WebAssembly inside a Web Worker on your device. Maximum renders pages with PDF.js and rebuilds the file with jsPDF, also on your device. No byte of your PDF is sent to a server, nothing is stored, and closing the tab discards everything."
+      privacy="Preserve and Balanced run qpdf as WebAssembly inside a Web Worker on your device. Maximum renders pages with PDF.js and rebuilds the file with jsPDF, also on your device. No byte of your PDF is sent to a server or stored remotely. The document exists only in your browser's memory while this page is open."
       faqs={[
         {
           question: "Is my PDF uploaded?",

@@ -33,9 +33,9 @@ function toOrigin(value: string | undefined): string | null {
  *   3. VERCEL_URL — Vercel deployment host.
  *   4. http://localhost:3000 — local development.
  *
- * NEXT_PUBLIC_SITE_URL must be set to the real canonical domain once a custom
- * production domain is chosen. It takes precedence over Vercel-generated
- * domains. None of these variables are secrets.
+ * Production sets NEXT_PUBLIC_SITE_URL to the canonical FileHush domain (see
+ * docs/product.md and .env.example). It takes precedence over
+ * Vercel-generated domains. None of these variables are secrets.
  */
 export function getSiteUrl(): string {
   return (

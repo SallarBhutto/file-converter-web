@@ -1,4 +1,4 @@
-# File Converter Web — Architecture
+# FileHush — Architecture
 
 Technical source of truth. Product intent is in [product.md](product.md);
 coding rules in [coding-standards.md](coding-standards.md).

@@ -1,4 +1,4 @@
-# File Converter Web — UI / UX
+# FileHush — UI / UX
 
 Design and interaction guide. Product principles are in
 [product.md](product.md); accessibility and performance are product

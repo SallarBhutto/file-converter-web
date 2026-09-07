@@ -25,7 +25,7 @@ export default function CompressWebpPage() {
         "Press Compress WebP. Each image is processed one after another.",
         "Compare the sizes, then download each image or all of them as a ZIP.",
       ]}
-      privacy="Your images are decoded and re-encoded by your browser's own WebP encoder. No file is sent to a server, nothing is stored, and closing the tab discards everything."
+      privacy="Your images are decoded and re-encoded by your browser's own WebP encoder. No file is sent to a server or stored remotely. Your images exist only in your browser's memory while this page is open."
       formatSection={{
         title: "How WebP compression works here",
         description:

@@ -1,6 +1,6 @@
 # Decision Log
 
-Architecture and product decisions for File Converter Web.
+Architecture and product decisions for FileHush (repository `file-converter-web`).
 
 ## How to use this log
 
@@ -171,3 +171,28 @@ byte-array API and needs no CDN.
 - Password-protected PDFs are rejected rather than unlocked.
 - Adding a mode means adding a config entry in `modes.ts` and, if it needs a
   new engine, a new decision entry.
+
+---
+
+## D010 — Public brand FileHush and domain filehush.org
+
+**Status:** Accepted
+
+**Decision:** The product's public brand is **FileHush** and its production
+domain is **filehush.org**. The brand promise is "Free file tools. No
+sign-up. Your files never leave your device." The repository, npm package
+and project folder keep the technical name `file-converter-web`; internal
+identifiers are not renamed. The domain reaches the app only through
+`NEXT_PUBLIC_SITE_URL` (D008) and is never hard-coded in application code.
+
+**Reasoning:** The product needed a memorable name and a canonical domain
+before search traffic exists. Keeping the technical name avoids churn in
+tooling, history and paths for no user benefit.
+
+**Consequences:**
+- `siteConfig.name` in `src/lib/seo/site-config.ts` is the single source of
+  the brand for the header, footer, titles and Open Graph.
+- Production deployments set `NEXT_PUBLIC_SITE_URL=https://filehush.org`.
+- Marketing copy leads with the three benefits (free, no sign-up, local
+  processing) and uses only technically accurate privacy wording, as
+  described in [product.md](product.md).

@@ -1,8 +1,11 @@
-# File Converter Web
+# FileHush
 
 Free, privacy-first file conversion and compression tools that run entirely in
-the browser. **Your files never leave your device.** Nothing is uploaded,
-processed on a server, or stored.
+the browser. No sign-up. **Your files never leave your device.** Nothing is
+uploaded, processed on a server, or stored remotely.
+
+FileHush is the public brand, live at [filehush.org](https://filehush.org).
+The repository keeps the technical name `file-converter-web`.
 
 ## Status
 
@@ -59,9 +62,14 @@ Copy `.env.example` to `.env.local` if you need to override the site origin.
 The public site origin drives canonical URLs, Open Graph URLs, `robots.txt`,
 and `sitemap.xml`. It resolves from `NEXT_PUBLIC_SITE_URL`, then Vercel's
 `VERCEL_PROJECT_PRODUCTION_URL` and `VERCEL_URL`, then `http://localhost:3000`.
-`NEXT_PUBLIC_SITE_URL` must be set to the real canonical domain once a custom
-production domain is chosen; it always takes precedence over Vercel-generated
-domains. These variables are not secrets.
+Production must set:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://filehush.org
+```
+
+It always takes precedence over Vercel-generated domains. These variables are
+not secrets.
 
 ## Quality commands
 

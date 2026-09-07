@@ -89,17 +89,10 @@ export const tools: readonly ToolDefinition[] = [
 export const toolCategoryLabels: Record<ToolCategory, string> = {
   "pdf-to-image": "PDF to image",
   "image-to-pdf": "Image to PDF",
-  compression: "Compress images",
+  compression: "Compress",
 };
 
 export const toolCategories: readonly ToolCategory[] = ["pdf-to-image", "image-to-pdf", "compression"];
-
-/** Committed tools that have no route yet. Names only, never links. */
-export const plannedTools: Record<ToolCategory, readonly string[]> = {
-  "pdf-to-image": [],
-  "image-to-pdf": [],
-  compression: [],
-};
 
 export function getToolsByCategory(category: ToolCategory): readonly ToolDefinition[] {
   return tools.filter((tool) => tool.category === category);

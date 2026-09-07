@@ -18,7 +18,7 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: ` — Convert and compress files in your browser`,
+    default: siteConfig.title,
     template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,

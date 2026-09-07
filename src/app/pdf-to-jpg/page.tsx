@@ -25,7 +25,7 @@ export default function PdfToJpgPage() {
         "Convert the document. Each page is rendered one at a time.",
         "Download individual pages, or download all JPGs as a ZIP.",
       ]}
-      privacy="Most online converters send your file to a server. This tool does not. Your browser reads the PDF, draws each page onto a canvas, and encodes the JPG locally. There is no upload, no queue, and no copy kept anywhere. Once you close the tab, the files are gone."
+      privacy="Most online converters send your file to a server. This tool does not. Your browser reads the PDF, draws each page onto a canvas, and encodes the JPG locally. There is no upload and no copy is kept on any server. The document exists only in your browser's memory while this page is open."
       formatSection={{
         title: "JPG quality",
         description:

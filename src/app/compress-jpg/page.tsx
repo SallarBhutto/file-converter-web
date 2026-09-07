@@ -25,7 +25,7 @@ export default function CompressJpgPage() {
         "Press Compress JPG. Each image is processed one after another.",
         "Compare the sizes, then download each image or all of them as a ZIP.",
       ]}
-      privacy="Your photos are decoded and re-encoded by your browser. No file is sent to a server, nothing is stored, and closing the tab discards everything. The tool works the same on a phone as on a desktop."
+      privacy="Your photos are decoded and re-encoded by your browser. No file is sent to a server or stored remotely. Your images exist only in your browser's memory while this page is open. The tool works the same on a phone as on a desktop."
       formatSection={{
         title: "How JPG compression works here",
         description:

@@ -1,4 +1,4 @@
-# File Converter Web — SEO
+# FileHush — SEO
 
 SEO is a core product strategy and a first-class requirement (D002 in
 [decisions.md](decisions.md)). Organic search is expected to be the primary
@@ -72,6 +72,10 @@ Each tool route needs:
 - canonical URL
 - appropriate Open Graph metadata
 
+The site name in titles and Open Graph is `FileHush`, taken from
+`siteConfig` in `src/lib/seo/site-config.ts`. Tool titles follow
+"<Tool> – Free & Private"; the homepage uses `siteConfig.title`.
+
 Avoid keyword stuffing. Titles and descriptions should read naturally.
 
 ## Site Infrastructure
@@ -84,7 +88,8 @@ Implement when the application begins:
 - canonical URLs
 - metadata defaults in the root layout
 - a configurable production site URL (environment variable), used for
-  canonicals, sitemap, and Open Graph
+  canonicals, sitemap, and Open Graph. Production is `https://filehush.org`,
+  set through `NEXT_PUBLIC_SITE_URL`; it is never hard-coded in app code
 - semantic HTML
 - meaningful internal links
 
