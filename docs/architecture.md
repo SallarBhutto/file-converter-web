@@ -62,6 +62,20 @@ Do not build:
 
 unless a future decision in `decisions.md` explicitly approves it.
 
+## Trust Pages (implemented)
+
+`/privacy`, `/terms` and `/contact` are Server Components with no client
+JavaScript of their own. They share one frame,
+`src/components/content/text-page.tsx`, which reuses the same container, type
+scale and borders as the tool pages; body copy is passed as data (strings for
+paragraphs, string arrays for bullet lists), matching how tool-page content is
+written. Their routes live in `src/lib/site-pages.ts`, which drives both the
+footer links and the sitemap, so the two cannot drift apart.
+
+Contact is an email address and nothing more. Adding a contact form would
+require a Route Handler or Server Action, which the rule below forbids for
+this purpose; it is not planned.
+
 ## No Backend By Default
 
 Next.js server capabilities (Server Components, static rendering, metadata,
@@ -314,6 +328,7 @@ src/
   components/
     layout/       # header, footer, navigation
     tool/         # dropzone, progress, results (shared tool UI)
+    content/      # prose page frame for privacy, terms, contact
     ui/           # small primitives (button, select)
   features/
     pdf-to-image/ # shared PDF → JPG/PNG/WebP feature, format config per tool
@@ -321,6 +336,7 @@ src/
     image-compression/ # shared JPG/PNG/WebP compressor, format config per tool
     pdf-compression/   # Compress PDF: qpdf modes plus rasterising Maximum mode
   lib/
+    site-pages.ts # registry of the non-tool trust pages
     files/        # validation, naming, size formatting, ZIP building
     pdf/          # PDF.js loading and rendering, qpdf worker runner
     image/        # browser decoding, canvas encoding, EXIF orientation

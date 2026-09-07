@@ -17,4 +17,20 @@ export const siteConfig = {
   /** Short line for the footer. */
   footerLine: "Private, browser-based file tools.",
   locale: "en_US",
+  /**
+   * The person who operates FileHush. It is run personally, not through a
+   * registered company, so this is the only entity named on the site.
+   */
+  operator: "Sallar Hussain Bhutto",
+  /**
+   * The one public contact address, used by the Contact page and the privacy
+   * and terms pages. No other address is published anywhere on the site.
+   */
+  contactEmail: "sallar0501@gmail.com",
+  /**
+   * Effective date shown on the Privacy Policy and Terms of Use. It is a
+   * fixed, human-readable date, not a build timestamp: change it only when
+   * the wording of those pages actually changes.
+   */
+  legalEffectiveDate: "September 7, 2026",
 } as const;

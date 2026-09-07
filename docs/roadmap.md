@@ -74,6 +74,19 @@ Implemented at `/compress-pdf` with three explicit modes (see D009 in
 Output is never larger than the input. Encrypted PDFs are rejected with a
 message; password handling is not implemented.
 
+## Phase 5.5 — Launch Readiness ✔
+
+- Privacy Policy at `/privacy` ✔
+- Terms of Use at `/terms` ✔
+- Contact at `/contact` (email only, no form) ✔
+- footer links to all three ✔
+- sitemap entries at a lower priority than the tools ✔
+
+The privacy copy describes current behaviour only. See D011 in
+[decisions.md](decisions.md): introducing analytics, advertising, accounts,
+cookies or any server-side file handling means updating these pages in the
+same change.
+
 ## Phase 6 — SEO Expansion (next)
 
 After tools work:

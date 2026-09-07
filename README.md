@@ -25,6 +25,13 @@ The repository keeps the technical name `file-converter-web`.
 Files are never made larger: when a rewrite does not help, the original is
 returned and marked as already optimized. Everything runs in the browser.
 
+Three non-tool pages support the launch: `/privacy`, `/terms` and `/contact`.
+They are Server Components with no client JavaScript, linked from the footer
+and listed in the sitemap. The privacy and terms copy describes how the site
+behaves **today**; introducing analytics, advertising, accounts, cookies or
+any server-side file handling means updating those pages in the same change
+(see D011 in [docs/decisions.md](docs/decisions.md)).
+
 See [docs/roadmap.md](docs/roadmap.md) for what comes next.
 
 ## Stack

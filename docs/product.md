@@ -32,6 +32,36 @@ the brand.
 
 Prefer "No sign-up required" over "No login required" in marketing copy.
 
+## Operator and Contact
+
+FileHush is operated personally by **Sallar Hussain Bhutto**. There is no
+company, and no company name, address, phone number or registration number
+may be published, because none exists.
+
+The single public contact address is **sallar0501@gmail.com**. It lives in
+`siteConfig` in `src/lib/seo/site-config.ts` alongside the operator name, and
+is the only email address that may appear on the site. Never publish an email
+address taken from git history or local configuration.
+
+## Public Trust Pages
+
+Three non-tool pages are live and linked from the footer:
+
+- `/privacy` — Privacy Policy
+- `/terms` — Terms of Use
+- `/contact` — Contact (an email address, no form and no backend)
+
+They carry a fixed effective date, `siteConfig.legalEffectiveDate`, which
+changes only when the wording changes — not on every build.
+
+**These pages describe current behaviour and must be revisited in the same
+task as any change to it.** If analytics, advertising, accounts, a backend
+that receives files, cookies, browser storage, an embedded third-party
+service, or any other data collection is introduced, the Privacy Policy (and
+the Terms where relevant) must be updated and the effective date moved in the
+same change. No governing-law jurisdiction is stated, by decision; see D011
+in [decisions.md](decisions.md).
+
 ## Product Purpose
 
 FileHush is a free, privacy-first collection of browser-based file

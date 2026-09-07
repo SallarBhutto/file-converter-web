@@ -48,3 +48,11 @@ and files are processed locally in the user's browser. They never leave the devi
     - tests
     - production build
 15. If a task changes an architectural or product decision, update the relevant documentation and add a new entry to `docs/decisions.md`.
+16. `/privacy` and `/terms` describe current behaviour. If a change introduces
+    analytics, advertising, accounts, cookies, browser storage, an embedded
+    third-party service, or any server-side handling of user files, update
+    those pages and move `siteConfig.legalEffectiveDate` in the same task.
+17. The only publishable contact address is `siteConfig.contactEmail`, and the
+    only named operator is `siteConfig.operator`. Never publish a company
+    name, address, phone number, or an email taken from git history or local
+    configuration.

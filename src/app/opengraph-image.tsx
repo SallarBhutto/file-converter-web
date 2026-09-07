@@ -4,12 +4,15 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 
 import { SYMBOL_PATH, SYMBOL_VIEW_BOX } from "@/lib/brand/symbol";
+import { ogImage } from "@/lib/seo/metadata";
 import { siteConfig } from "@/lib/seo/site-config";
 import { getSiteUrl } from "@/lib/seo/site-url";
 
-export const alt = `${siteConfig.name} – ${siteConfig.tagline}`;
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+// Sourced from the shared card description so the rendered image and the
+// og:image tags that describe it always agree.
+export const alt = ogImage.alt;
+export const size = { width: ogImage.width, height: ogImage.height };
+export const contentType = ogImage.type;
 
 const TEAL = "#0f766e";
 const INK = "#0a0a0a";

@@ -196,3 +196,48 @@ tooling, history and paths for no user benefit.
 - Marketing copy leads with the three benefits (free, no sign-up, local
   processing) and uses only technically accurate privacy wording, as
   described in [product.md](product.md).
+
+---
+
+## D011 — Public trust pages, operator identity, and no governing law
+
+**Status:** Accepted
+
+**Decision:** FileHush publishes three non-tool pages — `/privacy`, `/terms`
+and `/contact` — as Server Components sharing one prose frame
+(`src/components/content/text-page.tsx`) and one registry
+(`src/lib/site-pages.ts`), which also drives the footer links and their
+sitemap entries. The operator is named as **Sallar Hussain Bhutto**, an
+individual rather than a company, and **sallar0501@gmail.com** is the only
+public contact address; both live in `siteConfig`. Contact is an email
+address only: no form, no route handler, no server action, no third-party
+form service.
+
+The Terms deliberately state **no governing-law jurisdiction and no forum**.
+Limitations are qualified with "to the maximum extent permitted by applicable
+law" and a clause confirming that rights which cannot lawfully be excluded
+are unaffected.
+
+**Reasoning:** A public launch needs a privacy policy and terms, and the
+privacy copy is only defensible because D001 keeps processing in the browser.
+The pages were written from a verified audit of the codebase — no analytics,
+advertising, trackers, cookies, browser storage, accounts, route handlers or
+outbound requests — rather than from a template, so every claim is currently
+true. Naming a jurisdiction was deferred: the product has no users, no
+revenue and no legal advice behind it yet, and a wrong choice is worse than
+none.
+
+**Consequences:**
+- The Privacy Policy describes **current** behaviour. Introducing analytics,
+  advertising, accounts, cookies, browser storage, an embedded third-party
+  service, or any server-side handling of files requires updating
+  `/privacy` (and `/terms` where relevant) and moving
+  `siteConfig.legalEffectiveDate` **in the same change**.
+- `siteConfig.legalEffectiveDate` is a fixed human-readable date, not a build
+  timestamp, so it changes only when wording changes.
+- Vercel is named as the host. Adding another provider that receives visitor
+  information means naming it in the Privacy Policy.
+- A governing-law and dispute-resolution clause is an open item to revisit
+  with legal advice; adding one requires a new decision entry.
+- The three routes are indexable at sitemap priority 0.3 and are not in the
+  tool registry or the tools menu.
