@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     "public/pdfjs/**",
     "public/oxipng/**",
     "public/qpdf/**",
+    // Local design reference (git-excluded); generated support files, not source.
+    "design_handoff_filehush_identity/**",
   ]),
 ]);
 
