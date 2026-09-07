@@ -62,6 +62,18 @@ Do not build:
 
 unless a future decision in `decisions.md` explicitly approves it.
 
+## Analytics (implemented)
+
+`<Analytics />` from `@vercel/analytics/next` is mounted exactly once, at the
+end of `<body>` in `src/app/layout.tsx`, so it covers every route without any
+page opting in. It loads `/_vercel/insights/script.js`, a first-party path
+served by Vercel, and only in Vercel deployments; locally it is inert.
+
+It measures page views. It sets no cookies and uses no browser storage, so it
+does not weaken any privacy claim, and it never sees user files because those
+are never transmitted. Do not add custom events that could carry filenames,
+file sizes or document contents.
+
 ## Trust Pages (implemented)
 
 `/privacy`, `/terms` and `/contact` are Server Components with no client

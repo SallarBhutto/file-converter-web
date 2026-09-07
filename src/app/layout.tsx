@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import type { ReactNode } from "react";
@@ -56,6 +57,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <SiteFooter />
+        {/*
+          Vercel Web Analytics: aggregate page views only, mounted once here so
+          it covers every route. It is cookieless and stores nothing in the
+          browser, and it never sees the files users process, which stay in the
+          page. See the Analytics section of /privacy.
+        */}
+        <Analytics />
       </body>
     </html>
   );

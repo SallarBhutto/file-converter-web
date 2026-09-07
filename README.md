@@ -28,9 +28,10 @@ returned and marked as already optimized. Everything runs in the browser.
 Three non-tool pages support the launch: `/privacy`, `/terms` and `/contact`.
 They are Server Components with no client JavaScript, linked from the footer
 and listed in the sitemap. The privacy and terms copy describes how the site
-behaves **today**; introducing analytics, advertising, accounts, cookies or
-any server-side file handling means updating those pages in the same change
-(see D011 in [docs/decisions.md](docs/decisions.md)).
+behaves **today**; introducing advertising, accounts, cookies or any
+server-side file handling means updating those pages in the same change (see
+D011 in [docs/decisions.md](docs/decisions.md)). Vercel Web Analytics is
+enabled and described in the policy (D012).
 
 See [docs/roadmap.md](docs/roadmap.md) for what comes next.
 
@@ -45,6 +46,7 @@ See [docs/roadmap.md](docs/roadmap.md) for what comes next.
 - @jsquash/oxipng for lossless PNG optimisation, loaded on demand
 - qpdf-run (qpdf 11 as WebAssembly) for PDF optimisation, loaded on demand
 - fflate for in-browser ZIP creation, loaded on demand
+- @vercel/analytics for cookieless page-view measurement
 - Vitest for unit tests
 - ESLint, npm
 

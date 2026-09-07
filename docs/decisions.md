@@ -241,3 +241,36 @@ none.
   with legal advice; adding one requires a new decision entry.
 - The three routes are indexable at sitemap priority 0.3 and are not in the
   tool registry or the tools menu.
+
+---
+
+## D012 — Vercel Web Analytics
+
+**Status:** Accepted
+
+**Decision:** FileHush uses Vercel Web Analytics (`@vercel/analytics`) for
+aggregate page-view measurement. `<Analytics />` from
+`@vercel/analytics/next` is mounted once at the end of `<body>` in
+`src/app/layout.tsx`, so every route is covered and no page opts in
+individually. No other analytics product is added, and no custom events are
+sent. The Analytics section of `/privacy` was rewritten in the same change,
+as D011 requires.
+
+**Reasoning:** Launch needs a basic answer to "is anyone using this, and
+which tools?". Vercel Web Analytics is the lightest option that does not
+compromise the product's privacy position: it is cookieless, stores nothing
+in the browser, needs no consent banner, and its script is served
+first-party from `/_vercel/insights/script.js` by the host already named in
+the policy, so no new third party enters the picture.
+
+**Consequences:**
+- It measures pages, not files. User files are never transmitted, so no
+  filename, size or content can reach it. Custom events must never carry
+  such data; adding events at all requires a new decision entry.
+- The cookie and browser-storage claims in `/privacy` remain true and were
+  verified against the package: it references no cookie or storage API.
+- It is active only on Vercel deployments; locally it is inert.
+- Switching to, or adding, an analytics product that sets cookies or builds
+  profiles would require a new decision entry, a policy rewrite and probably
+  a consent mechanism.
+

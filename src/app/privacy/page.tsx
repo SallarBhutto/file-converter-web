@@ -55,7 +55,7 @@ const sections: readonly Section[] = [
     title: "Hosting",
     body: [
       "FileHush is hosted on Vercel, which provides the servers and content delivery for the site. As part of delivering and protecting the site, Vercel may process the kind of request information described above, under its own terms and privacy practices.",
-      "The pages, scripts, fonts and processing components the site uses are served from the FileHush domain itself. FileHush does not currently embed any other third-party service that would receive information about your visit.",
+      "The pages, scripts, fonts and processing components the site uses are served from the FileHush domain itself, as is the Vercel Web Analytics script described below. Beyond Vercel, FileHush does not currently embed a third-party service that would receive information about your visit.",
     ],
   },
   {
@@ -69,8 +69,10 @@ const sections: readonly Section[] = [
     id: "analytics",
     title: "Analytics",
     body: [
-      "FileHush does not currently use product or marketing analytics. No analytics script runs on these pages and no usage events are collected.",
-      "If we introduce analytics in the future, this policy will be updated to describe the relevant data practices.",
+      "FileHush uses Vercel Web Analytics to count visits and see which tools people use. It records a page view when you open a page: the page address, the referring page if there is one, and coarse technical details such as approximate country, device type, operating system and browser.",
+      "It is aggregate traffic measurement, not tracking. It sets no cookies, stores nothing in your browser, and does not build a profile of you or follow you to other websites. Vercel derives a visitor count without retaining your IP address for that purpose.",
+      "It measures pages, not the work you do on them. The files you convert or compress are never sent anywhere, so no filename, file content, file size or conversion result is available to analytics or to us.",
+      "If we change how we measure usage, or add marketing analytics, this policy will be updated to describe the relevant data practices.",
     ],
   },
   {
@@ -85,7 +87,7 @@ const sections: readonly Section[] = [
     id: "cookies",
     title: "Cookies and browser storage",
     body: [
-      "The FileHush file tools do not need cookies to work. The site sets no cookies of its own, and it does not use local storage, session storage or similar browser storage to identify or track you.",
+      "The FileHush file tools do not need cookies to work. The site sets no cookies of its own, and it does not use local storage, session storage or similar browser storage to identify or track you. The analytics described above are cookieless and leave nothing on your device, so there is no consent banner to click through.",
       "Your browser and the hosting infrastructure may still use ordinary technical mechanisms of their own, such as caching or protective measures applied by the host. FileHush does not control those and does not use them to identify you.",
     ],
   },

@@ -32,5 +32,5 @@ export const siteConfig = {
    * fixed, human-readable date, not a build timestamp: change it only when
    * the wording of those pages actually changes.
    */
-  legalEffectiveDate: "September 7, 2026",
+  legalEffectiveDate: "September 8, 2026",
 } as const;

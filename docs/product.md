@@ -148,9 +148,14 @@ These are hard requirements, enforced by the browser-only rule in
 - User filenames should not be collected by analytics.
 - Converted files should not be stored remotely.
 - Temporary browser memory and object URLs must be released appropriately.
-- If analytics are introduced later, they may track product usage (tool used,
-  success/failure, coarse timing) but must not collect document contents or
-  filenames.
+- Analytics may track product usage (pages viewed, coarse timing) but must
+  never collect document contents, filenames or file sizes.
+
+**Vercel Web Analytics is enabled** (see D012 in [decisions.md](decisions.md)).
+It is cookieless page-view measurement served first-party; it cannot see the
+files users process, because those never leave the browser. Any change to how
+usage is measured must update the Analytics section of `/privacy` in the same
+task.
 
 ## Monetization
 
